@@ -1,0 +1,33 @@
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="3dpart/raphael.min.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/currency.js"></script>
+<script src="js/coinlist.js"></script>
+<script src="js/crypto.js"></script>
+<style>  
+    #currency {width:80px;}
+    #currlist span{cursor: pointer; display:inline-block; margin-left:10px;padding:4px;}
+    #currlist span:hover{color:#777777; }
+
+	#control{margin-left:100px;border:1px solid black;display:inline-block;padding:10px; }
+</style>
+<body>
+
+<div id="control">
+<span>Currencies: </span> 
+<span id="currlist"><span id="BTC" title="click to remove">BTC</span></span>
+add: 
+<input list="currencies" id="currency">
+<datalist id="currencies"></datalist><br>
+<select id="chooseCurrency"><option>USD</option><option>EUR</option><option>BTC</option><option>ETH</option></select>
+<input id="showHour" type="radio" name="interval"  disabled>Last hour
+<input id="show12Hour" type="radio" name="interval" checked disabled>12 Hours
+<input id="show24Hour" type="radio" name="interval" disabled>24 Hours
+<input id="showWeek" type="radio" name="interval" disabled>7 Days
+<input id="showMonth" type="radio" name="interval" disabled>30 Days
+<input id="show3Month" type="radio" name="interval" disabled>90 Days
+<input id="showYear" type="radio" name="interval" disabled>Year  
+</div>
+</body>
+</html>
