@@ -58,10 +58,6 @@ function init(){
 
 }
 
-function deleteMe(){
-
-}
-
 function updateCurrencyList(){
 var currs="";
 	$("#currlist>span").each(

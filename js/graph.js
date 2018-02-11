@@ -9,6 +9,7 @@ class DrawGraph{
 
 		this.height=500;
 		this.width=1000;
+		this.timeStampsCount=20;
 
 		this.valuesShow=720;
 		this.paper = raphael;
@@ -48,21 +49,21 @@ class DrawGraph{
 		this.coords=this.paper.path("M"+this.startX+" "+this.startY+"L"+this.startX+" "+(this.height+this.startY)+"L"+(this.width+this.startX)+" "+(this.height+this.startY));
 	}
 
-	showTimestamps(hourOrMinute){
-		var timeStampsCount=20;
-		
-	//	console.log(hourOrMinute);
-		var currentDate= Date.now();
+	showTimestamps(hourOrMinute, date){
+		var currentDate= date*1000;
+
 		var timeStep =60*1000*((hourOrMinute=="hour")?60:1);
 
-		if (hourOrMinute=="day")
+		if (hourOrMinute=="day"){
 			timeStep=timeStep*60*24;
+		}
 //		console.log(curr);
 		this.timestamps=[];
-		for (var i=timeStampsCount; i>0; i--){
-			var timestamp=this.paper.text((this.width/timeStampsCount)*i+this.startX, this.height+this.startY+15, this.formatDate(currentDate-(timeStampsCount-i)*timeStep*this.valuesShow/timeStampsCount));
-			this.paper.path("M"+((this.width/timeStampsCount)*i+this.startX)+" "+(this.height+this.startY-10)+"L"+((this.width/timeStampsCount)*i+this.startX)+" "+(this.height+this.startY+10))
+		for (var i=this.timeStampsCount; i>0; i--){
+			var timestamp=this.paper.text((this.width/this.timeStampsCount)*i+this.startX, this.height+this.startY+15, this.formatDate(currentDate-(this.timeStampsCount-i)*timeStep*this.valuesShow/this.timeStampsCount));
+			this.paper.path("M"+((this.width/this.timeStampsCount)*i+this.startX)+" "+(this.height+this.startY-10)+"L"+((this.width/this.timeStampsCount)*i+this.startX)+" "+(this.height+this.startY+10))
 		}
+		this.timelinesReady=true;
 	}
 
 	addGraph(curr){
@@ -77,7 +78,8 @@ class DrawGraph{
 	}
 	
 
-	drawLines(){
+	drawLines(hourOrMinute){
+		this.timelinesReady=false;
 	//	console.log("MaxValue"+this.maxVal);
 		var step=(this.width)/this.valuesShow;	
 		var diff=this.height/(this.maxVal*2);
@@ -91,6 +93,9 @@ class DrawGraph{
 
 			if (this.currencies[curname].conversion!=curname){
 				if (array.length>0 || array.hasOwnProperty("data")>0){
+					if (!this.timelinesReady){
+						this.showTimestamps(hourOrMinute, array["data"][array["data"].length-1].time)
+					}
 					for (var i=0; i<this.valuesShow-1; i++){
 						var pathStr = "M"+Math.round(step*i+this.startX)+" "+Math.round(this.height/2-diff*array["data"][i].relative+this.startY );
 						pathStr+="L"+Math.round(step*(i+1)+this.startX)+" "+Math.round( this.height/2-diff*array["data"][i+1].relative+this.startY );	

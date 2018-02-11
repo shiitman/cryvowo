@@ -21,7 +21,7 @@ class Currency{
 						if (self.counter<5){
 							setTimeout(
 								function(){
-									console.log(self.counter, self.name)
+									console.log(self.name, self.counter+" try");
 									self.getHistoricLast(coinlist, ind);
 									self.counter++;
 								}, 1500
@@ -52,7 +52,6 @@ class Currency{
 			return;
 		}
 		var timeDiff=(data.TimeTo-data.TimeFrom);
-	//	console.log(data.Data[0]);
 		var max=data.Data[0].close;
 		var min=data.Data[0].close;
 		for (var i in data.Data){
@@ -75,7 +74,7 @@ class Currency{
 			var rel=(data.Data[i].close-mid)/mid*100;
 			self.values["data"].push({value:data.Data[i].close, relative:rel, time:data.Data[i].time});
 		}
-console.log(self.values["data"]);
+		console.log(self.values["data"]);
 	//	console.log("AddLine", self.name);
 		drawObj.addGraph(self);
 	

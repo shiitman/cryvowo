@@ -44,7 +44,6 @@ class Coinlist{
         this.counter=0;
         this.graph.valuesShow=this.valuesCount;
         this.graph.resetAll();
-        this.graph.showTimestamps(this.hourOrMin);
         this.graph.initColors(this.myCurr.length);
         this.graph.showGraph();
         for (var i in this.myCurr){
@@ -60,7 +59,7 @@ class Coinlist{
  	    //            console.log(this.counter);
         if (this.counter>=this.myCurr.length){
      //       console.log("TEST");
-	 this.graph.drawLines();
+			 this.graph.drawLines(this.hourOrMin);
              this.counter=0;
         }
     }
