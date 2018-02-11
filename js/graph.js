@@ -28,6 +28,8 @@ class DrawGraph{
 		this.buttons=[];
 		this.captions=[];
 		this.text=this.paper.text(20, 10, "").attr("font-weight", "bold");
+		this.textBackground=this.paper.rect(20,20,50,50).attr({"opacity":0.7, "fill":"#ffffff"});
+		this.textBackground.hide();
 	}
 
 	initColors(size){
@@ -98,7 +100,7 @@ class DrawGraph{
 						newPath.X=Math.round(step*i+this.startX);
 						newPath.Y=Math.round(this.height/2-diff*array["data"][i].relative+this.startY);
 						newPath.VAL=array["data"][i].value;
-
+						newPath.INDEX=i;
 						newPath.TIME=this.formatDate(array["data"][i].time*1000); 
 						newPath.COLOR=this.colors[colorIndex];
 						newPath.CUR=curname;
@@ -124,6 +126,7 @@ class DrawGraph{
 					newPath.X=self.startX+self.width/2;
 					newPath.Y=self.startY;
 					newPath.VAL=1;
+					newPath.INDEX=0;
 
 					newPath.TIME=""; 
 					newPath.COLOR=this.colors[colorIndex];
@@ -161,16 +164,14 @@ class DrawGraph{
 		newPath.hover(
 			function(){
 				if (self.line[this.CUR].length>1){
-					self.text.attr("text", this.CUR+"\n"+this.VAL+"\n"+this.TIME);		
-					self.text.attr("x", this.X);		
-					self.text.attr("y", this.Y-30);		
-					self.text.show();				
+				
 					self.vertical=self.paper.path("M"+(this.X)+" "+self.startY+"L"+(this.X)+" "+(self.startY+self.height)).attr('stroke-dasharray',"-..");
 					self.horizontal=self.paper.path("M"+(self.startX)+" "+this.Y+"L"+(self.startX+self.width)+" "+(this.Y)).attr('stroke-dasharray',"-..");
 
 					self.selectGraph(this.CUR, 3, true)
 					this.circle= self.paper.circle (this.X, this.Y, 6).attr("fill", this.COLOR);					
 					this.toFront();
+					self.showTextValue(this);	
 				}
 				else{
 					self.selectGraph(this.CUR, 3, true)
@@ -182,6 +183,7 @@ class DrawGraph{
 					self.selectGraph(this.CUR, 2, false)
 					self.vertical.remove();
 					self.horizontal.remove();
+					self.textBackground.hide();
 					self.text.hide();
 					this.circle.remove();					
 				}
@@ -198,6 +200,15 @@ class DrawGraph{
 			}
 		);
 
+	}
+	showTextValue(path){
+		this.textBackground.show();
+		this.textBackground.attr({"x":path.X-25, "y":path.Y-75});	
+		this.textBackground.toFront();
+		this.text.attr("text", path.CUR+"\n"+path.VAL+"\n"+path.TIME);		
+		this.text.attr({"x":path.X, "y":path.Y-50});		
+		this.text.show();				
+		this.text.toFront();
 	}
 
 	addButton(curr, colorIndex, active){
