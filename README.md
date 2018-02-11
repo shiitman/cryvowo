@@ -1,0 +1,2 @@
+# cryvowo
+Cryptocurrencies volatility watcher
