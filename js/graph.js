@@ -1,5 +1,7 @@
 class DrawGraph {
     constructor(raphael, startX, startY, buttonY, buttWidth, buttHeight, width, height) {
+        this.paper = raphael;
+
         this.startX = startX;
         this.startY = startY;
         this.buttonY = buttonY;
@@ -13,29 +15,24 @@ class DrawGraph {
         this.hourOrMinute = "minute";
 
         this.valuesShow = 1;
-        this.paper = raphael;
         this.currencies = [];
         this.valuesShow = 720;
 
-        this.resetAll();
-        this.showGraph();
+        this.resetPaper();
+        this.showAxes();
     }
 
-    resize(x, y, w, h) {
+    resizePaper(x, y, w, h) {
         this.startX = x;
         this.startY = y;
-        /*  this.buttonY = buttonY;
-          this.buttonWidth = buttWidth;
-          this.buttonHeight = buttHeight;*/
-
         this.height = h;
         this.width = w;
 
-        this.resetDrawing();
+        this.resetGraph();
     }
 
-    resetAll() {
-        this.resetDrawing();
+    resetPaper() {
+        this.resetGraph();
         this.currencies = [];
         this.maxVal = 0;
         this.line = [];
@@ -47,7 +44,7 @@ class DrawGraph {
         this.canvas = new DrawCanvas(this.startX, this.startY, this.width, this.height, this.paper);
     }
 
-    resetDrawing() {
+    resetGraph() {
         this.paper.clear();
         this.text = this.paper.text(0, 0, "").attr("font-weight", "bold");
         this.textBackground = this.paper.rect(0, 0, this.textRectSide, this.textRectSide).attr({ "opacity": 0.7, "fill": "#ffffff" });
@@ -55,18 +52,20 @@ class DrawGraph {
     }
 
     initColors(size) {
-        console.log("test", size);
+        var sin_to_hex = function (i, phase, size) {
+            var sin = Math.sin(Math.PI / size * 2 * i + phase);
+            var int = Math.floor(sin * 127) + 128;
+            var hex = int.toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        }
+
         this.colors[0] = "#000000";
         for (var i = 1; i < size + 1; i++) {
-            var red = this.sin_to_hex(i, 0 * Math.PI * 2 / 3, size); // 0   deg
-            var blue = this.sin_to_hex(i, 1 * Math.PI * 2 / 3, size); // 120 deg
-            var green = this.sin_to_hex(i, 2 * Math.PI * 2 / 3, size); // 240 deg
-
-            this.colors[i] = "#" + red + green + blue;
+            this.colors[i] = "#" + sin_to_hex(i, 0, size) + sin_to_hex(i, Math.PI * 2 / 3, size) + sin_to_hex(i, Math.PI * 4 / 3, size);
         }
     }
 
-    showGraph() {
+    showAxes() {
         this.coords = this.paper.path("M" + this.startX + " " + this.startY + "L" + this.startX + " " + (this.height + this.startY) + "L" + (this.width + this.startX) + " " + (this.height + this.startY));
     }
 
@@ -81,12 +80,12 @@ class DrawGraph {
         this.timestamps = [];
         for (var i = this.timeStampsCount; i > 0; i--) {
             var timestamp = this.paper.text((this.width / this.timeStampsCount) * i + this.startX, this.height + this.startY + 15, this.formatDate(currentDate - (this.timeStampsCount - i) * timeStep * this.valuesShow / this.timeStampsCount));
-            this.paper.path("M" + ((this.width / this.timeStampsCount) * i + this.startX) + " " + (this.height + this.startY - 10) + "L" + ((this.width / this.timeStampsCount) * i + this.startX) + " " + (this.height + this.startY + 10))
+            this.paper.path("M" + ((this.width / this.timeStampsCount) * i + this.startX) + " " + (this.height + this.startY - 10) + "L" + ((this.width / this.timeStampsCount) * i + this.startX) + " " + (this.height + this.startY + 10));
         }
         this.timelinesReady = true;
     }
 
-    addGraph(curr) {
+    addCurrency(curr) {
         var self = this;
         this.line[curr.name] = [];
         this.currencies[curr.name] = curr;
@@ -95,150 +94,6 @@ class DrawGraph {
                 this.maxVal = Math.abs(this.currencies[curr.name].values["data"][i].relative);
             }
         }
-    }
-
-    drawLines(hourOrMinute = null, count = null) {
-        console.log("lines count", Object.keys(this.currencies).length);
-        this.initColors(Object.keys(this.currencies).length);
-        this.showGraph();
-
-        if (hourOrMinute != null) {
-            this.hourOrMinute = hourOrMinute;
-        }
-        else {
-            hourOrMinute = this.hourOrMinute;
-        }
-        if (count != null) {
-            this.valuesShow = count;
-        }
-        this.timelinesReady = false;
-        var step = (this.width) / this.valuesShow;
-        var diff = this.height / (this.maxVal * 2);
-        for (var curname in this.currencies) {
-            var colorIndex = this.currencies[curname].index;
-
-            console.log(curname);
-            var array = this.currencies[curname].values;
-            var active = true;
-
-            if (this.currencies[curname].conversion != curname) {
-                if (array.length > 0 || array.hasOwnProperty("data") > 0) {
-                    if (!this.timelinesReady) {
-                        this.showTimestamps(hourOrMinute, array["data"][array["data"].length - 1].time)
-                    }
-                    for (var i = 0; i < this.valuesShow - 1; i++) {
-                        var pathStr = "M" + Math.round(step * i + this.startX) + " " + Math.round(this.height / 2 - diff * array["data"][i].relative + this.startY);
-                        pathStr += "L" + Math.round(step * (i + 1) + this.startX) + " " + Math.round(this.height / 2 - diff * array["data"][i + 1].relative + this.startY);
-
-                        var newPath = this.paper.path(pathStr);
-
-                        newPath.X = Math.round(step * i + this.startX);
-                        newPath.Y = Math.round(this.height / 2 - diff * array["data"][i].relative + this.startY);
-                        newPath.VAL = array["data"][i].value;
-                        newPath.INDEX = i;
-                        newPath.TIME = this.formatDate(array["data"][i].time * 1000);
-                        newPath.COLOR = this.colors[colorIndex];
-                        newPath.CUR = curname;
-                        this.createHover(newPath);
-
-                        newPath.attr("stroke", this.colors[colorIndex]).attr("stroke-width", 2);
-
-                        //	console.log(curname);
-                        if (!this.line[curname])
-                            console.log(curname, "error");
-
-                        this.line[curname].push(newPath);
-                    }
-                }
-                else {
-                    active = false;
-                }
-            }
-            else {
-                var pathStr = "M" + this.startX + " " + Math.round(this.height / 2 + this.startY);
-                pathStr += "L" + (this.startX + this.width) + " " + Math.round(this.height / 2 + this.startY);
-                var newPath = this.paper.path(pathStr);
-                newPath.X = self.startX + self.width / 2;
-                newPath.Y = self.startY;
-                newPath.VAL = 1;
-                newPath.INDEX = 0;
-
-                newPath.TIME = "";
-                newPath.COLOR = this.colors[colorIndex];
-                newPath.CUR = curname;
-                newPath.attr("stroke", this.colors[colorIndex]).attr("stroke-width", 2);
-                this.createHover(newPath);
-
-                this.line[curname].push(newPath);
-            }
-            this.addButton(this.currencies[curname], colorIndex, active);
-        }
-    }
-
-    formatDate(time) {
-        var date = new Date(time)
-
-        var dates = [];
-        dates[0] = (date.getMonth() + 1).toString();
-        dates[1] = (date.getDate()).toString();
-        dates[2] = (date.getHours()).toString();
-        dates[3] = (date.getMinutes()).toString();
-        dates[4] = (date.getYear() - 100).toString();
-
-        for (var d in dates) {
-            if (dates[d].length < 2)
-                dates[d] = "0" + dates[d];
-        }
-        return (dates[0] + "." + dates[1] + "." + dates[4] + "\n" + dates[2] + ":" + dates[3]);
-    }
-
-    createHover(newPath) {
-        var self = this;
-
-        newPath.hover(
-            function () {
-                if (self.line[this.CUR].length > 1) {
-                    self.vertical = self.paper.path("M" + (this.X) + " " + self.startY + "L" + (this.X) + " " + (self.startY + self.height)).attr('stroke-dasharray', "-..");
-                    self.horizontal = self.paper.path("M" + (self.startX) + " " + this.Y + "L" + (self.startX + self.width) + " " + (this.Y)).attr('stroke-dasharray', "-..");
-
-                    self.selectGraph(this.CUR, 3, true)
-                    this.circle = self.paper.circle(this.X, this.Y, 6).attr("fill", this.COLOR);
-                    this.toFront();
-                    self.showTextValue(this);
-                }
-                else {
-                    self.selectGraph(this.CUR, 3, true)
-                }
-            },
-            function () {
-                if (self.line[this.CUR].length > 1) {
-                    this.attr("stroke", this.COLOR);
-                    self.selectGraph(this.CUR, 2, false)
-                    self.vertical.remove();
-                    self.horizontal.remove();
-                    self.textBackground.hide();
-                    self.text.hide();
-                    this.circle.remove();
-                }
-                else {
-                    self.selectGraph(this.CUR, 2, false)
-                }
-            }
-        );
-
-        newPath.click(
-            function () {
-            }
-        );
-    }
-    showTextValue(path) {
-        this.textBackground.show();
-        this.textBackground.attr({ "x": path.X - 25, "y": path.Y - 75 });
-        this.textBackground.toFront();
-        this.text.attr("text", path.CUR + "\n" + path.VAL + "\n" + path.TIME);
-        this.text.attr({ "x": path.X, "y": path.Y - 50 });
-        this.text.show();
-        this.text.toFront();
     }
 
     addButton(curr, colorIndex, active) {
@@ -304,6 +159,149 @@ class DrawGraph {
         }
     }
 
+    drawGraph(hourOrMinute = null, count = null) {
+        this.initColors(Object.keys(this.currencies).length);
+        this.showAxes();
+
+        if (hourOrMinute != null) {
+            this.hourOrMinute = hourOrMinute;
+        }
+        else {
+            hourOrMinute = this.hourOrMinute;
+        }
+        if (count != null) {
+            this.valuesShow = count;
+        }
+        this.timelinesReady = false;
+        var step = (this.width) / this.valuesShow;
+        var diff = this.height / (this.maxVal * 2);
+        for (var curname in this.currencies) {
+            var colorIndex = this.currencies[curname].index;
+
+            var array = this.currencies[curname].values;
+            var active = true;
+
+            if (this.currencies[curname].conversion != curname) {
+                if (array.length > 0 || array.hasOwnProperty("data") > 0) {
+                    if (!this.timelinesReady) {
+                        this.showTimestamps(hourOrMinute, array["data"][array["data"].length - 1].time)
+                    }
+                    for (var i = 0; i < this.valuesShow - 1; i++) {
+                        var pathStr = "M" + Math.round(step * i + this.startX) + " " + Math.round(this.height / 2 - diff * array["data"][i].relative + this.startY);
+                        pathStr += "L" + Math.round(step * (i + 1) + this.startX) + " " + Math.round(this.height / 2 - diff * array["data"][i + 1].relative + this.startY);
+
+                        var newPath = this.paper.path(pathStr);
+
+                        newPath.X = Math.round(step * i + this.startX);
+                        newPath.Y = Math.round(this.height / 2 - diff * array["data"][i].relative + this.startY);
+                        newPath.VAL = array["data"][i].value;
+                        newPath.INDEX = i;
+                        newPath.TIME = this.formatDate(array["data"][i].time * 1000);
+                        newPath.COLOR = this.colors[colorIndex];
+                        newPath.CUR = curname;
+                        this.createHoverFunction(newPath);
+
+                        newPath.attr("stroke", this.colors[colorIndex]).attr("stroke-width", 2);
+
+                        //	console.log(curname);
+                        if (!this.line[curname])
+                            console.log(curname, "error");
+
+                        this.line[curname].push(newPath);
+                    }
+                }
+                else {
+                    active = false;
+                }
+            }
+            else {
+                var pathStr = "M" + this.startX + " " + Math.round(this.height / 2 + this.startY);
+                pathStr += "L" + (this.startX + this.width) + " " + Math.round(this.height / 2 + this.startY);
+                var newPath = this.paper.path(pathStr);
+                newPath.X = self.startX + self.width / 2;
+                newPath.Y = self.startY;
+                newPath.VAL = 1;
+                newPath.INDEX = 0;
+
+                newPath.TIME = "";
+                newPath.COLOR = this.colors[colorIndex];
+                newPath.CUR = curname;
+                newPath.attr("stroke", this.colors[colorIndex]).attr("stroke-width", 2);
+                this.createHoverFunction(newPath);
+
+                this.line[curname].push(newPath);
+            }
+            this.addButton(this.currencies[curname], colorIndex, active);
+        }
+    }
+
+    formatDate(time) {
+        var date = new Date(time)
+
+        var dates = [];
+        dates[0] = (date.getMonth() + 1).toString();
+        dates[1] = (date.getDate()).toString();
+        dates[2] = (date.getHours()).toString();
+        dates[3] = (date.getMinutes()).toString();
+        dates[4] = (date.getYear() - 100).toString();
+
+        for (var d in dates) {
+            if (dates[d].length < 2)
+                dates[d] = "0" + dates[d];
+        }
+        return (dates[0] + "." + dates[1] + "." + dates[4] + "\n" + dates[2] + ":" + dates[3]);
+    }
+
+    createHoverFunction(newPath) {
+        var self = this;
+
+        newPath.hover(
+            function () {
+                if (self.line[this.CUR].length > 1) {
+                    self.vertical = self.paper.path("M" + (this.X) + " " + self.startY + "L" + (this.X) + " " + (self.startY + self.height)).attr('stroke-dasharray', "-..");
+                    self.horizontal = self.paper.path("M" + (self.startX) + " " + this.Y + "L" + (self.startX + self.width) + " " + (this.Y)).attr('stroke-dasharray', "-..");
+
+                    self.selectGraph(this.CUR, 3, true)
+                    this.circle = self.paper.circle(this.X, this.Y, 6).attr("fill", this.COLOR);
+                    this.toFront();
+                    self.showTextValue(this);
+                }
+                else {
+                    self.selectGraph(this.CUR, 3, true)
+                }
+            },
+            function () {
+                if (self.line[this.CUR].length > 1) {
+                    this.attr("stroke", this.COLOR);
+                    self.selectGraph(this.CUR, 2, false)
+                    self.vertical.remove();
+                    self.horizontal.remove();
+                    self.textBackground.hide();
+                    self.text.hide();
+                    this.circle.remove();
+                }
+                else {
+                    self.selectGraph(this.CUR, 2, false)
+                }
+            }
+        );
+
+        newPath.click(
+            function () {
+            }
+        );
+    }
+
+    showTextValue(path) {
+        this.textBackground.show();
+        this.textBackground.attr({ "x": path.X - 25, "y": path.Y - 75 });
+        this.textBackground.toFront();
+        this.text.attr("text", path.CUR + "\n" + path.VAL + "\n" + path.TIME);
+        this.text.attr({ "x": path.X, "y": path.Y - 50 });
+        this.text.show();
+        this.text.toFront();
+    }
+
     selectGraph(name, val, front) {
         for (var j in this.line[name]) {
             if (front) {
@@ -320,14 +318,6 @@ class DrawGraph {
                 this.texts[name][j].hide();
             }
         }
-    }
-
-    sin_to_hex(i, phase, size) {
-        var sin = Math.sin(Math.PI / size * 2 * i + phase);
-        var int = Math.floor(sin * 127) + 128;
-        var hex = int.toString(16);
-
-        return hex.length === 1 ? "0" + hex : hex;
     }
 }
 
@@ -381,9 +371,6 @@ class DrawCanvas {
             else if (canvas.drawMode == 1) {
                 if (canvas.isDrawing) {
                     canvas.interval++;
-                    /*							if (this.line!=null){
-                                                }
-                    */
                     if (!(e.buttons & 1)) {
                         canvas.isDrawing = false;
 
@@ -405,30 +392,15 @@ class DrawCanvas {
                 }
             }
         });
-        /*
-    canvas.mouseup(function(e){
-            if (canvas.isDrawing)
-            {
-                canvas.isDrawing=false;
-                            var line=paper.path(`M${this.startX} ${this.startY} L${e.layerX} ${e.layerY}`).attr({"stroke":"#ff0000", "stroke-width":4});
-                            line.toFront();
-                            self.figures.push(line);
-                            this.startX=e.layerX;
-                            this.startY=e.layerY;
-            }
-        });
-
-        */
     }
 
-    showCanvas() {
-        this.canvas.show();
-        this.canvas.toFront();
+    clearCanvas() {
         for (var i = 0; i < this.figures.length; i++) {
-            this.figures[i].show();
-            this.figures[i].toFront();
+            this.figures[i].remove();
         }
+        this.figures = [];
     }
+
     hideCanvas() {
         this.canvas.hide();
         //		this.clearCanvas();
@@ -437,21 +409,22 @@ class DrawCanvas {
         }
     }
 
-    selectLine() {
-        var canvas = this.canvas;
-        canvas.drawMode = 0;
-    }
-
     selectCurve() {
         var canvas = this.canvas;
         canvas.drawMode = 1;
         console.log(canvas.drawMode);
     }
 
-    clearCanvas() {
+    selectLine() {
+        var canvas = this.canvas;
+        canvas.drawMode = 0;
+    }
+    showCanvas() {
+        this.canvas.show();
+        this.canvas.toFront();
         for (var i = 0; i < this.figures.length; i++) {
-            this.figures[i].remove();
+            this.figures[i].show();
+            this.figures[i].toFront();
         }
-        this.figures = [];
     }
 }

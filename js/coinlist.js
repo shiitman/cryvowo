@@ -49,7 +49,7 @@ class Coinlist {
         }
         console.log(this.valuesCount, hourOrMin, valuesCount);
         this.counter = 0;
-        this.graph.resetAll();
+        this.graph.resetPaper();
 
         for (var i in this.myCurr) {
             console.log(i);
@@ -67,7 +67,7 @@ class Coinlist {
         //            console.log(this.counter);
         if (this.counter >= this.myCurr.length) {
             //       console.log("TEST");
-            this.graph.drawLines(this.hourOrMin, this.valuesCount);
+            this.graph.drawGraph(this.hourOrMin, this.valuesCount);
             this.counter = 0;
             this.isLoading = false;
         }

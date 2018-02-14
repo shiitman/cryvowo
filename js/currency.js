@@ -73,8 +73,6 @@ class Currency {
             var rel = (data.Data[i].close - mid) / mid * 100;
             self.values["data"].push({ value: data.Data[i].close, relative: rel, time: data.Data[i].time });
         }
-        console.log(self.values["data"]);
-        //	console.log("AddLine", self.name);
-        drawObj.addGraph(self);
+        drawObj.addCurrency(self);
     }
 }
