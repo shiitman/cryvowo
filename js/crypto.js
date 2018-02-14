@@ -1,6 +1,6 @@
 class Main {
     constructor() {
-        this.initialCurrencies = ["Etherum (ETH)", "Bitcoin (BTC)", "DigitalCash (DASH)", "Dogecoin (DOGE)"];
+        this.initialCurrencies = ["Bitcoin (BTC)", "Etherum (ETH)", "Litecoin (LTC)", "DigitalCash (DASH)", "Dogecoin (DOGE)"];
     }
 
     init() {
