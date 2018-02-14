@@ -175,6 +175,12 @@ class DrawGraph {
         this.timelinesReady = false;
         var step = (this.width) / this.valuesShow;
         var diff = this.height / (this.maxVal * 2);
+
+        for (let i = 0; i < 21; i++) {
+            this.paper.text(this.startX - 20, this.startY + i * this.height / 20, (Math.round((0 - i + 10) * this.maxVal / 10) + 100) + "%");
+            this.paper.path(`M${(this.startX - 5)} ${(this.startY + i * this.height / 20)} L${(this.startX + 5)} ${(this.startY + i * this.height / 20)}`).attr("stroke-dasharray", "-..");
+        }
+
         for (var curname in this.currencies) {
             var colorIndex = this.currencies[curname].index;
 

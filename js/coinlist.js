@@ -16,7 +16,6 @@ class Coinlist {
         this.myCurr = str.split(",");
         this.myCurr.map(function (val, index) {
             if (val === "") {
-                console.log("test");
                 self.myCurr.splice(index, 1);
             }
         });
@@ -26,7 +25,6 @@ class Coinlist {
     getCoins(datalist) {
         $.ajax("https://min-api.cryptocompare.com/data/all/coinlist").done(function (data) {
             var keys = Object.keys(data.Data);
-            console.log(data.Data);
             for (var i = 0; i < keys.length; i++) {
                 //   console.log(keys[i]);
                 datalist.append(`<option value='${data.Data[keys[i]].FullName}'></option>`);
@@ -52,17 +50,13 @@ class Coinlist {
         this.graph.resetPaper();
 
         for (var i in this.myCurr) {
-            console.log(i);
             var curr = new Currency(this.myCurr[i], this.convertTo);
             curr.getHistoricLast(this, i);
-            console.log(this.currencies);
             this.currencies.push(curr);
         }
     }
 
     increaseCounter() {
-        console.log("COUNTER");
-        console.log(this.hourOrMin, this.valuesCount);
         this.counter++;
         //            console.log(this.counter);
         if (this.counter >= this.myCurr.length) {
