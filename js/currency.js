@@ -37,7 +37,7 @@ class Currency {
             });
         }
         else {
-            drawObj.addGraph(self);
+            drawObj.addCurrency(self);
             coinlist.increaseCounter();
         }
     }
