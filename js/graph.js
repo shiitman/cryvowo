@@ -264,15 +264,14 @@ class DrawGraph {
         var self = this;
 
         newPath.hover(
-            function () {
+            function (e) {
                 if (self.line[this.CUR].length > 1) {
                     self.vertical = self.paper.path("M" + (this.X) + " " + self.startY + "L" + (this.X) + " " + (self.startY + self.height)).attr('stroke-dasharray', "-..");
                     self.horizontal = self.paper.path("M" + (self.startX) + " " + this.Y + "L" + (self.startX + self.width) + " " + (this.Y)).attr('stroke-dasharray', "-..");
-
                     self.selectGraph(this.CUR, 3, true)
-                    this.circle = self.paper.circle(this.X, this.Y, 6).attr("fill", this.COLOR);
+                    this.circle = self.paper.circle(e.offsetX, e.offsetY, 6).attr("fill", this.COLOR);
                     this.toFront();
-                    self.showTextValue(this);
+                    self.showTextValue(this, e.offsetX, e.offsetY);
                 }
                 else {
                     self.selectGraph(this.CUR, 3, true)
@@ -300,12 +299,12 @@ class DrawGraph {
         );
     }
 
-    showTextValue(path) {
+    showTextValue(path, x, y) {
         this.textBackground.show();
-        this.textBackground.attr({ "x": path.X - 25, "y": path.Y - 75 });
+        this.textBackground.attr({ "x": x - 25, "y": y - 75 });
         this.textBackground.toFront();
         this.text.attr("text", path.CUR + "\n" + path.VAL + "\n" + path.TIME);
-        this.text.attr({ "x": path.X, "y": path.Y - 50 });
+        this.text.attr({ "x": x, "y": y - 50 });
         this.text.show();
         this.text.toFront();
     }
