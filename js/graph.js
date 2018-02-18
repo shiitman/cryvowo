@@ -266,8 +266,8 @@ class DrawGraph {
         newPath.hover(
             function (e) {
                 if (self.line[this.CUR].length > 1) {
-                    self.vertical = self.paper.path("M" + (this.X) + " " + self.startY + "L" + (this.X) + " " + (self.startY + self.height)).attr('stroke-dasharray', "-..");
-                    self.horizontal = self.paper.path("M" + (self.startX) + " " + this.Y + "L" + (self.startX + self.width) + " " + (this.Y)).attr('stroke-dasharray', "-..");
+                    self.vertical = self.paper.path("M" + (e.offsetX) + " " + self.startY + "L" + (e.offsetX) + " " + (self.startY + self.height)).attr('stroke-dasharray', "-..");
+                    self.horizontal = self.paper.path("M" + (self.startX) + " " + e.offsetY + "L" + (self.startX + self.width) + " " + (e.offsetY)).attr('stroke-dasharray', "-..");
                     self.selectGraph(this.CUR, 3, true)
                     this.circle = self.paper.circle(e.offsetX, e.offsetY, 6).attr("fill", this.COLOR);
                     this.toFront();
