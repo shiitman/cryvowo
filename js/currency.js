@@ -66,6 +66,9 @@ class Currency {
         self.values["max"] = max;
         self.values["min"] = min;
         self.values["mid"] = mid;
+        self.values["max_r"] = (max - mid) / mid * 100;
+        self.values["min_r"] = (min - mid) / mid * 100;
+        self.values["mid_r"] = 0
 
         self.values["data"] = [];
 

@@ -106,12 +106,14 @@ class DrawGraph {
         self.texts[curr.name] = {};
         var arr = ["max", "mid", "min"];
 
+        var diff = this.height / (this.maxVal * 2);
+
         if (active) {
             var array = curr.values;
             if (curr.name != curr.conversion) {
                 for (var k in arr) {
                     var key = arr[k];
-                    self.texts[curr.name][key] = this.paper.text(this.startX + this.width + this.startX, this.startY + k * (this.height / 2), curr.name + "\n" + array[key]);
+                    self.texts[curr.name][key] = this.paper.text(this.startX + this.width + this.startX, Math.round(this.height / 2 - diff * array[key + "_r"] + this.startY), curr.name + "\n" + array[key]);
                     self.texts[curr.name][key].hide();
                 }
             }

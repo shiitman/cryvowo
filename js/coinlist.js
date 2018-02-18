@@ -44,7 +44,6 @@ class Coinlist {
         if (valuesCount !== null) {
             this.valuesCount = valuesCount;
         }
-        console.log(this.valuesCount, hourOrMin, valuesCount);
         this.counter = 0;
         this.graph.resetPaper();
 
