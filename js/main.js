@@ -13,28 +13,17 @@ class Main {
         this.coinList.getCoins($("#currencies"));
 
         this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
-        this.addCurrencies(this.initialCurrencies);
+        this.addCurrencies(this.loadCookie());
 
         this.updateCurrencyList();
         $("#control>#show12Hour").click();
     }
 
     addCurrencies(currArray) {
+        $("#currlist").empty();
         for (let i = 0; i < currArray.length; i++) {
             this.addCurrencyFromString(currArray[i]);
         }
-    }
-
-    updateCurrencyList() {
-        var currs = "";
-        $("#currlist>span").each(
-            function () {
-                currs += this.id + ",";
-            }
-        );
-        currs = currs.slice(0, -1);
-        this.coinList.upgradeCurrList(currs);
-        this.coinList.showLast();
     }
 
     addCurrencyFromString(str) {
@@ -47,13 +36,55 @@ class Main {
         var newCurr = strings[2];
 
         if ($("#currlist>#" + newCurr).length === 0) {
-            $("#currlist").append(`<span id="${newCurr}" title="${currName} - click to remove">${newCurr}</span>`);
+            $("#currlist").append(`<span id="${newCurr}" data-longname="${currName}" title="${currName} - click to remove">${newCurr}</span>`);
             $("#currlist>#" + newCurr).click(function () {
                 this.remove();
                 self.updateCurrencyList();
             });
         }
         $(`#currlist>#${newCurr}`).button();
+    }
+
+    loadCookie() {
+        var cookie = Cookies.get("currencies");
+        if (!Cookies.get("currencies")) {
+            console.log(this.initialCurrencies)
+            console.log(this.initialCurrencies.join(","))
+
+            this.setCookie(this.initialCurrencies);
+            return this.initialCurrencies;
+        }
+        else {
+            var array = cookie.split(",");
+            for (var i in array) {
+                if (array[i].match(/(.*)\((.*)\).*/).length < 3) {
+                    Cookies.remove("currencies");
+                    loadCookie();
+                    // something wrong with cookies, lets reset them
+                }
+            }
+            return array;
+        }
+    }
+
+    setCookie(array) {
+        Cookies.set("currencies", array.join(","), { expires: 7 });
+        //  console.log(Cookies.get("currencies"));
+    }
+
+    updateCurrencyList() {
+        var currString = "";
+        var currencyNames = [];
+        $("#currlist>span").each(
+            function () {
+                currString += this.id + ",";
+                currencyNames.push($(this).data("longname") + "(" + this.id + ")");
+            }
+        );
+        this.setCookie(currencyNames);
+        currString = currString.slice(0, -1);
+        this.coinList.upgradeCurrList(currString);
+        this.coinList.showLast();
     }
 
     initInterface(graph, coinList, width, height) {

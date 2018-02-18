@@ -47,7 +47,7 @@ class Currency {
         if (data.Response == "Error") {
             console.log(this.name + " Error");
             self.values = [];
-            drawObj.addGraph(self);
+            drawObj.addCurrency(self);
             return;
         }
         var timeDiff = (data.TimeTo - data.TimeFrom);

@@ -19,7 +19,6 @@ class Coinlist {
                 self.myCurr.splice(index, 1);
             }
         });
-        console.log(this.myCurr);
     }
 
     getCoins(datalist) {
