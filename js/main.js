@@ -33,7 +33,7 @@ class Main {
             return;
         }
         var currName = strings[1];
-        var newCurr = strings[2];
+        var newCurr = strings[2].replace("*", "");
 
         if ($("#currlist>#" + newCurr).length === 0) {
             $("#currlist").append(`<span id="${newCurr}" data-longname="${currName}" title="${currName} - click to remove">${newCurr}</span>`);
