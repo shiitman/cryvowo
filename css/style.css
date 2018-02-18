@@ -50,3 +50,8 @@
     padding: 4px;
     visibility: hidden;
 }
+
+#donations {
+    position: absolute;
+    bottom: 10px;
+}
