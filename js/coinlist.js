@@ -32,6 +32,12 @@ class Coinlist {
     }
 
     showLast(hourOrMin = null, valuesCount = null) {
+        var self = this;
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+
         if (!this.isLoading) {
             this.isLoading = true;
         }
@@ -44,6 +50,7 @@ class Coinlist {
         if (valuesCount !== null) {
             this.valuesCount = valuesCount;
         }
+
         this.counter = 0;
         this.graph.resetPaper();
 
@@ -52,6 +59,21 @@ class Coinlist {
             curr.getHistoricLast(this, i);
             this.currencies.push(curr);
         }
+
+        var timeout;
+        if (this.hourOrMin == "minute") {
+            timeout = Date.now() % 60000;
+            if (timeout == 0)
+                timeout += 60000;
+        }
+        if (this.hourOrMin == "hour") {
+            timeout = Date.now() % 3600000;
+            if (timeout == 0)
+                timeout += 3600000;
+        }
+        this.interval = setInterval(function () {
+            self.showLast();
+        }, timeout);
     }
 
     increaseCounter() {
