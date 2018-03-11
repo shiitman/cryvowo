@@ -60,7 +60,7 @@ class Coinlist {
             this.currencies.push(curr);
         }
 
-        var timeout;
+        var timeout=0;
         if (this.hourOrMin == "minute") {
             timeout = Date.now() % 60000;
             if (timeout == 0)
