@@ -71,9 +71,12 @@ class Coinlist {
             if (timeout == 0)
                 timeout += 3600000;
         }
-        this.interval = setInterval(function () {
-            self.showLast();
-        }, timeout);
+        if (this.hourOrMin != "day") {
+            this.interval = setInterval(function () {
+                self.showLast();
+            }, timeout);
+        }
+
     }
 
     increaseCounter() {
