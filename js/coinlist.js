@@ -60,23 +60,22 @@ class Coinlist {
             this.currencies.push(curr);
         }
 
-        var timeout=0;
+        var timeout = 0;
         if (this.hourOrMin == "minute") {
-            timeout = Date.now() % 60000;
-            if (timeout == 0)
-                timeout += 60000;
+          timeout = 60000 - Date.now() % 60000;
+          if (timeout == 0)
+            timeout += 60000;
         }
         if (this.hourOrMin == "hour") {
-            timeout = Date.now() % 3600000;
-            if (timeout == 0)
-                timeout += 3600000;
+          timeout = 3600000 - Date.now() % 3600000;
+          if (timeout == 0)
+            timeout += 3600000;
         }
         if (this.hourOrMin != "day") {
-            this.interval = setInterval(function () {
-                self.showLast();
-            }, timeout);
+          this.interval = setInterval(function() {
+            self.showLast();
+          }, timeout);
         }
-
     }
 
     increaseCounter() {
