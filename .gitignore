@@ -1,3 +1,6 @@
 .vs/
 Crypto.sln
 Crypto.jsproj
+js/drawCanvas.js
+bin
+bld

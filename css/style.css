@@ -55,3 +55,10 @@
     position: absolute;
     bottom: 10px;
 }
+
+.tooltip{
+  position:absolute;
+  z-index: 255;
+  background-color:white;
+  height:30px;
+}
