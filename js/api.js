@@ -1,9 +1,7 @@
 /*jshint esversion: 6 */
 
 class CurrencyAPI {
-  constructor() {
-
-  }
+  constructor() {}
   getHistorical(hoursOrMinutes, name, conversion, valuesCount, processFunction, cancelFunction, counter = 0) {
     var self = this;
     $.ajax("https://min-api.cryptocompare.com/data/histo" + hoursOrMinutes + "?fsym=" + name + "&tsym=" + conversion + "&limit=" + valuesCount).done(function(data) {
@@ -23,6 +21,4 @@ class CurrencyAPI {
       }
     });
   }
-
-
 }

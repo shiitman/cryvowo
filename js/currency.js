@@ -39,7 +39,6 @@ class Currency {
     }
     var timeDiff = (data.TimeTo - data.TimeFrom);
 
-
     var max = data.Data[0].close;
     var min = data.Data[0].close;
     for (let i in data.Data) {
@@ -62,7 +61,6 @@ class Currency {
     self.values.data = [];
     self.values.timeTo = data.TimeTo;
     self.values.timeFrom = data.TimeFrom;
-    console.log(data.TimeTo, data.TimeFrom);
     for (let i in data.Data) {
       var rel = (data.Data[i].close - mid) / mid * 100;
       self.values.data.push({

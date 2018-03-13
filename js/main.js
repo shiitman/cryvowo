@@ -9,7 +9,7 @@ class Main {
     var winHeight = window.innerHeight * 0.7 - 30;
 
 
-    var svg = d3.select("#raphaelCanvas").append("svg:svg");
+    var svg = d3.select("#raphaelCanvas").append("svg:svg").attr("id", "svg");
     d3.select("svg").attr("width", (winWidth))
       .attr("height", (winHeight));
 
@@ -203,13 +203,19 @@ class Main {
     $("#control").dialog();
 
     $("#addImg").click(function() {
-      /*      var svgText = graph.paper.toSVG();
-            var a = document.createElement('a');
-            a.download = 'cryptochart.svg';
-            a.type = 'image/svg+xml';
-            var blob = new Blob([svgText], { "type": "image/svg+xml" });
-            a.href = (window.URL || webkitURL).createObjectURL(blob);
-            a.click();*/
+
+      var serializer = new XMLSerializer();
+
+      var a = document.createElement('a');
+      a.download = 'cryptochart.svg';
+      a.type = 'image/svg+xml';
+      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {
+        "type": "image/svg+xml"
+      });
+      a.href = (window.URL || webkitURL).createObjectURL(blob);
+      a.click();
+      a.detach();
+
     });
   }
 }

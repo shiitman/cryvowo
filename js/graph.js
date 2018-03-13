@@ -84,12 +84,10 @@ class DrawGraph {
     var maxVal = 0;
     var timeFrom = Number.MAX_VALUE;
     var timeTo = 0;
-    console.log(coinlist.currencies.length);
     this.initColors(coinlist.currencies.length);
 
     for (let currI in coinlist.currencies) {
       let curr = coinlist.currencies[currI];
-      console.log(curr);
       for (var i in curr.values.data) {
         if (maxVal < Math.abs(curr.values.data[i].relative)) {
           maxVal = Math.abs(curr.values.data[i].relative);
@@ -130,11 +128,11 @@ class DrawGraph {
     this.svg.append("g").attr("transform", `translate(${this.startX}, ${this.height+ this.startY})`)
       .call(x_axis).selectAll("text")
       .style("text-anchor", "end").text(function(d) {
-        console.log(this.parentNode);
+        //        console.log(this.parentNode);
         var t = d3.select(this.parentNode).append("text").style("text-anchor", "end").attr("fill", "black").text(timeFormat(d).toString().split(" ")[0]).attr("dx", "-1.8em")
           .attr("dy", ".15em")
           .attr("transform", "rotate(-65)");
-        console.log(t);
+        //      console.log(t);
         return timeFormat(d).toString().split(" ")[1];
       })
       .attr("dx", "-.8em")
@@ -150,7 +148,6 @@ class DrawGraph {
       });
 
     this.svg.selectAll("rect").data(coinlist.currencies).enter().append("rect").attr("x", function(d, ind) {
-      console.log(ind);
       return self.startX + ind * self.buttonWidth;
     }).attr("width", self.buttonWidth).attr("height", self.buttonHeight * 1.8).attr("y", self.buttonY).attr("fill", function(d, ind) {
       return self.colors[ind];
@@ -165,7 +162,6 @@ class DrawGraph {
     this.svg.selectAll("text.captions").data(coinlist.currencies).enter().append("text").attr("x", function(d, ind) {
       return self.startX + ind * self.buttonWidth + self.buttonWidth * 0.5;
     }).attr("y", self.buttonY + self.buttonHeight * 0.6 * 2).text(function(d) {
-      console.log(d.values);
       return d.values.data[d.values.data.length - 1].close;
     }).attr("class", "button").attr("font-size", self.buttonHeight * 0.6).attr("text-anchor", "middle");
 
@@ -178,7 +174,9 @@ class DrawGraph {
         .attr("d", valueline).attr("fill", "transparent").attr("stroke", this.colors[currI]).attr("transform", `translate(${this.startX},${this.startY})`).moveToBack();
 
       this.svg.selectAll("circle ." + curr.name)
-        .data(curr.values.data).enter().append("circle").attr("class", curr.name).attr("cx", function(d) {
+        .data(curr.values.data).enter().append("circle")
+        .attr("class", curr.name)
+        .attr("cx", function(d) {
           return scale2(d.time * 1000);
         })
         .attr("cy", function(d) {
@@ -187,7 +185,7 @@ class DrawGraph {
         .attr("r", 1)
         .attr("transform", `translate(${this.startX},${this.startY})`)
         .attr("fill", this.colors[currI]).attr("stroke", this.colors[currI]).on("click", function(d) {
-          console.log(this);
+          //  console.log(this);
         }).moveToFront()
         .on("mouseover", function(d) {
           d3.select(this).attr("r", 4);

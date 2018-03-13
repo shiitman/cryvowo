@@ -1,53 +1,57 @@
+<!DOCTYPE html>
 <html>
+
 <head>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/graph.js"></script>
+  <script src="js/currency.js"></script>
+  <script src="js/coinlist.js"></script>
+  <script src="js/main.js"></script>
 
-    <script src="3dpart/raphael.min.js"></script>
-    <script src="3dpart/raphael.export.js"></script> <!---->
-    <script src="js/api.js"></script>
-    <script src="js/graph.js"></script>
-    <script src="js/currency.js"></script>
-    <script src="js/coinlist.js"></script>
-    <script src="js/main.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="css/style.css">
 
-    <link rel="stylesheet" href="css/style.css">
+  <title>Cryptovolatility compare</title>
 </head>
-<body>
-    <button id='addImg'>Save .svg</button>
-    <div id="tools">
-        <button id="showCanvas">Show Canvas</button><button id="hideCanvas" style="display:none;">Hide Canvas</button>
-        <button id="clearCanvas">Clear Canvas</button>
-        <input id="line" type="radio" name="drawl" checked>Line
-        <input id="curve" type="radio" name="drawl">Curve
-    </div>
-    <div id="control">
-        <select id="chooseCurrency"><option>USD</option><option>EUR</option><option>BTC</option><option>ETH</option></select><br />
-        <input id="showHour" type="radio" name="interval"><label for="showHour">Last hour</label><br />
-        <input id="show12Hour" type="radio" name="interval"><label for="show12Hour">12 Hours</label><br />
-        <input id="show24Hour" type="radio" name="interval"><label for="show24Hour">24 Hours</label><br />
-        <input id="showWeek" type="radio" name="interval"><label for="showWeek">7 Days</label><br />
-        <input id="showMonth" type="radio" name="interval"><label for="showMonth">30 Days</label><br />
-        <input id="show3Month" type="radio" name="interval"><label for="show3Month">90 Days</label><br />
-        <input id="showYear" type="radio" name="interval"><label for="showYear">Year</label>
-    </div>
-    <div id="currencyWindow">
-        <fieldset>
-            <legend>Currencies:</legend>
-            <div id="currlist"></div>
-        </fieldset>
-        <div id="addCurrency">
-            Add currency: <br \>
-            <input list="currencies" id="currency">
-            <datalist id="currencies"></datalist>
-        </div>
-    </div>
 
-    <div id="raphaelCanvas"></div>
-    <div id="donations">by Alexander Wolodarsky.<br /> <b>BTC</b>: 1MZSXaMrrKBXcZ9nyUPu65DDNLeEAM1i1T, <b>ETH</b>: 0xacC5418d564CF3A5E8793A445B281B5e3476c3f0, <b>LTC</b>: LNZickqsM27JJkk7LNvr2HPMdpmd1noFxS, <b>DASH</b>: XtiKPjGeMPf9d1Gw99JY23czRYqBDN4Q69</div>
+<body>
+  <button id="addImg">Save .svg</button>
+  <div id="tools">
+    <button id="showCanvas">Show Canvas</button><button id="hideCanvas" style="display:none;">Hide Canvas</button>
+    <button id="clearCanvas">Clear Canvas</button>
+    <input id="line" type="radio" name="drawl" checked>Line
+    <input id="curve" type="radio" name="drawl">Curve
+  </div>
+  <div id="control">
+    <select id="chooseCurrency"><option>USD</option><option>EUR</option><option>BTC</option><option>ETH</option></select><br />
+    <input id="showHour" type="radio" name="interval"><label for="showHour">Last hour</label><br />
+    <input id="show12Hour" type="radio" name="interval"><label for="show12Hour">12 Hours</label><br />
+    <input id="show24Hour" type="radio" name="interval"><label for="show24Hour">24 Hours</label><br />
+    <input id="showWeek" type="radio" name="interval"><label for="showWeek">7 Days</label><br />
+    <input id="showMonth" type="radio" name="interval"><label for="showMonth">30 Days</label><br />
+    <input id="show3Month" type="radio" name="interval"><label for="show3Month">90 Days</label><br />
+    <input id="showYear" type="radio" name="interval"><label for="showYear">Year</label>
+  </div>
+  <div id="currencyWindow">
+    <fieldset>
+      <legend>Currencies:</legend>
+      <div id="currlist"></div>
+    </fieldset>
+    <div id="addCurrency">
+      Add currency: <br \>
+      <input list="currencies" id="currency">
+      <datalist id="currencies"></datalist>
+    </div>
+  </div>
+
+  <div id="raphaelCanvas"></div>
+  <div id="donations">by Alexander Wolodarsky.<br /> <b>BTC</b>: 1MZSXaMrrKBXcZ9nyUPu65DDNLeEAM1i1T, <b>ETH</b>: 0xacC5418d564CF3A5E8793A445B281B5e3476c3f0, <b>LTC</b>: LNZickqsM27JJkk7LNvr2HPMdpmd1noFxS, <b>DASH</b>: XtiKPjGeMPf9d1Gw99JY23czRYqBDN4Q69</div>
+
 </body>
+
 </html>
