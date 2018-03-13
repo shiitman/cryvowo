@@ -1,0 +1,19 @@
+{
+  "name": "crywovo",
+  "version": "1.2.0",
+  "description": "Observe and compare the exchange rates of different cryptocurrencies to optimize your portfolio. Relative price fluctuations can be displayed on the same graph.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shiitman/cryvowo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shiitman/cryvowo/issues"
+  },
+  "homepage": "https://github.com/shiitman/cryvowo#readme"
+}

@@ -4,3 +4,4 @@ Crypto.jsproj
 js/drawCanvas.js
 bin
 bld
+node_modules
