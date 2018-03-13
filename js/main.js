@@ -195,6 +195,8 @@ class Main {
 }
 
 $(document).ready(function() {
+  var worker = new CryptoWorker();
+  worker.startWorker();
   var main = new Main();
   main.init();
 });

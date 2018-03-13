@@ -11,6 +11,7 @@
   <script src="js/graph.js"></script>
   <script src="js/currency.js"></script>
   <script src="js/coinlist.js"></script>
+  <script src="js/worker.js"></script>
   <script src="js/main.js"></script>
 
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -51,17 +52,7 @@
 
   <div id="raphaelCanvas"></div>
   <div id="donations">by Alexander Wolodarsky.<br /> <b>BTC</b>: 1MZSXaMrrKBXcZ9nyUPu65DDNLeEAM1i1T, <b>ETH</b>: 0xacC5418d564CF3A5E8793A445B281B5e3476c3f0, <b>LTC</b>: LNZickqsM27JJkk7LNvr2HPMdpmd1noFxS, <b>DASH</b>: XtiKPjGeMPf9d1Gw99JY23czRYqBDN4Q69</div>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw/sw.js').then(function(registration) {
-        // Registration was successful
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }).catch(function(err) {
-        // registration failed :(
-        console.log('ServiceWorker registration failed: ', err);
-      });
-    }
-  </script>
+
 </body>
 
 </html>
