@@ -13,7 +13,7 @@ class Main {
     d3.select("svg").attr("width", (winWidth))
       .attr("height", (winHeight));
 
-    this.graph = new DrawGraph(svg, 50, 30, 5, 100, 20, winWidth - 40, winHeight - 100);
+    this.graph = new DrawGraph(svg, 50, 45, 5, 100, 20, winWidth - 40, winHeight - 100);
     this.coinList = new Coinlist(this.graph);
     this.coinList.getCoins($("#currencies"));
 
@@ -75,7 +75,6 @@ class Main {
     Cookies.set("currencies", array.join(","), {
       expires: 7
     });
-    //  console.log(Cookies.get("currencies"));
   }
 
   updateCurrencyList() {
@@ -84,7 +83,7 @@ class Main {
     $("#currlist>span").each(
       function() {
         currString += this.id + ",";
-        currencyNames.push($(this).data("longname") + "(" + this.id + ")");
+        currencyNames.push($(this).data("longname") + `(${this.id})`);
       }
     );
     this.setCookie(currencyNames);
@@ -130,29 +129,6 @@ class Main {
       coinList.showLast();
     });
 
-    /*
-    $("#showCanvas").click(function() {
-        graph.canvas.showCanvas();
-        $("#showCanvas").hide();
-        $("#hideCanvas").show();
-    });
-
-    $("#hideCanvas").click(function() {
-        graph.canvas.hideCanvas();
-        $("#hideCanvas").hide();
-        $("#showCanvas").show();
-    });
-
-    $("#line").click(function() {
-        graph.canvas.selectLine();
-    });
-    $("#curve").click(function() {
-        graph.canvas.selectCurve();
-    });
-    $("#clearCanvas").click(function() {
-        graph.canvas.clearCanvas();
-    });
-    */
 
     $("#control>input").checkboxradio({
       icon: false,
@@ -183,8 +159,6 @@ class Main {
         of: control
       }
     });
-    //  $("svg").appendTo("#raphaelCanvas");
-
     let raphWin = $("#raphaelCanvas").dialog({
       width: width * 0.8,
       height: height * 0.77,
@@ -204,9 +178,9 @@ class Main {
 
     $("#addImg").click(function() {
 
-      var serializer = new XMLSerializer();
+      let serializer = new XMLSerializer();
 
-      var a = document.createElement('a');
+      let a = document.createElement('a');
       a.download = 'cryptochart.svg';
       a.type = 'image/svg+xml';
       var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {
