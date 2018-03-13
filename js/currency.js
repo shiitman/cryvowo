@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 class Currency {
   constructor(name, conv) {
     this.name = name;
@@ -41,7 +42,7 @@ class Currency {
 
     var max = data.Data[0].close;
     var min = data.Data[0].close;
-    for (var i in data.Data) {
+    for (let i in data.Data) {
       if (max < data.Data[i].close) {
         max = data.Data[i].close;
       }
@@ -51,20 +52,20 @@ class Currency {
     }
     var mid = (max + min) / 2;
 
-    self.values["max"] = max;
-    self.values["min"] = min;
-    self.values["mid"] = mid;
-    self.values["max_r"] = (max - mid) / mid * 100;
-    self.values["min_r"] = (min - mid) / mid * 100;
-    self.values["mid_r"] = 0
+    self.values.max = max;
+    self.values.min = min;
+    self.values.mid = mid;
+    self.values.max_r = (max - mid) / mid * 100;
+    self.values.min_r = (min - mid) / mid * 100;
+    self.values.mid_r = 0;
 
-    self.values["data"] = [];
-    self.values["timeTo"] = data.TimeTo;
-    self.values["timeFrom"] = data.TimeFrom;
+    self.values.data = [];
+    self.values.timeTo = data.TimeTo;
+    self.values.timeFrom = data.TimeFrom;
     console.log(data.TimeTo, data.TimeFrom);
-    for (var i in data.Data) {
+    for (let i in data.Data) {
       var rel = (data.Data[i].close - mid) / mid * 100;
-      self.values["data"].push({
+      self.values.data.push({
         close: data.Data[i].close,
         relative: rel,
         time: data.Data[i].time

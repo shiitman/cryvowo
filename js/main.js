@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 class Main {
   constructor() {
     this.initialCurrencies = ["Bitcoin (BTC)", "Etherum (ETH)", "Litecoin (LTC)", "DigitalCash (DASH)", "Dogecoin (DOGE)"];
@@ -7,9 +8,7 @@ class Main {
     var winWidth = window.innerWidth * 0.8 - 60;
     var winHeight = window.innerHeight * 0.7 - 30;
 
-    /*
-        this.raph = Raphael(0, 0, raphaelWidth, raphaelHeight);
-*/
+
     var svg = d3.select("#raphaelCanvas").append("svg:svg");
     d3.select("svg").attr("width", (winWidth))
       .attr("height", (winHeight));
@@ -54,8 +53,8 @@ class Main {
   loadCookie() {
     var cookie = Cookies.get("currencies");
     if (!Cookies.get("currencies")) {
-      console.log(this.initialCurrencies)
-      console.log(this.initialCurrencies.join(","))
+      //      console.log(this.initialCurrencies)
+      //      console.log(this.initialCurrencies.join(","))
 
       this.setCookie(this.initialCurrencies);
       return this.initialCurrencies;
