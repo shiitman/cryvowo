@@ -1,5 +1,5 @@
 /*jshint esversion: 6 */
-//["BTC","ETH","ZRX", "REP", "BNT", "BAT", "BCH", "BTG", "CVC", "DASH", "DCR", "EDG", "EOS", "LTC", "ETC","FUN", "GNO", "GNT", "RLC"];
+
 class Coinlist {
   constructor(graph) {
     this.myCurr = [];

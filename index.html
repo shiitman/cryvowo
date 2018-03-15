@@ -22,7 +22,7 @@
 
 <body>
   <button id="addImg">Save .svg</button>
-  <div id="tools">
+  <div id="tools" class="tools">
     <button id="showCanvas">Show Canvas</button><button id="hideCanvas" style="display:none;">Hide Canvas</button>
     <button id="clearCanvas">Clear Canvas</button>
     <input id="line" type="radio" name="drawl" checked>Line
@@ -38,20 +38,20 @@
     <input id="show3Month" type="radio" name="interval"><label for="show3Month">90 Days</label><br />
     <input id="showYear" type="radio" name="interval"><label for="showYear">Year</label>
   </div>
-  <div id="currencyWindow">
+  <div id="currencyWindow" class="currencyWindow">
     <fieldset>
       <legend>Currencies:</legend>
-      <div id="currlist"></div>
+      <div id="currlist" class="currlist"></div>
     </fieldset>
-    <div id="addCurrency">
+    <div id="addCurrency" class="addCurrency">
       Add currency: <br \>
-      <input list="currencies" id="currency">
+      <input list="currencies" id="currency" class="currency">
       <datalist id="currencies"></datalist>
     </div>
   </div>
 
   <div id="raphaelCanvas"></div>
-  <div id="donations">by Alexander Wolodarsky.<br /> <b>BTC</b>: 1MZSXaMrrKBXcZ9nyUPu65DDNLeEAM1i1T, <b>ETH</b>: 0xacC5418d564CF3A5E8793A445B281B5e3476c3f0, <b>LTC</b>: LNZickqsM27JJkk7LNvr2HPMdpmd1noFxS, <b>DASH</b>: XtiKPjGeMPf9d1Gw99JY23czRYqBDN4Q69</div>
+  <div id="donations" class="donations">by Alexander Wolodarsky.<br /> <b>BTC</b>: 1MZSXaMrrKBXcZ9nyUPu65DDNLeEAM1i1T, <b>ETH</b>: 0xacC5418d564CF3A5E8793A445B281B5e3476c3f0, <b>LTC</b>: LNZickqsM27JJkk7LNvr2HPMdpmd1noFxS, <b>DASH</b>: XtiKPjGeMPf9d1Gw99JY23czRYqBDN4Q69</div>
 
 </body>
 

@@ -18,7 +18,6 @@ d3.selection.prototype.moveToBack = function() {
 
 class DrawGraph {
   constructor(svg, startX, startY, buttonY, buttWidth, buttHeight, width, height) {
-    //    this.paper = raphael;
     this.svg = svg;
     this.startX = startX;
     this.startY = startY;
@@ -49,15 +48,7 @@ class DrawGraph {
 
   resetPaper() {
     this.resetGraph();
-    this.currencies = [];
-    this.maxVal = 0;
-    this.line = [];
-    this.texts = [];
     this.colors = [];
-    this.buttons = [];
-    this.captions = [];
-
-    //    this.canvas = new DrawCanvas(this.startX, this.startY, this.width, this.height, this.paper);
   }
 
   resetGraph() {
@@ -81,30 +72,21 @@ class DrawGraph {
   drawGraph(coinlist, hourOrMinute = null, count = null) {
     var self = this;
     this.resetPaper();
-    var maxVal = 0;
-    var timeFrom = Number.MAX_VALUE;
-    var timeTo = 0;
+
     this.initColors(coinlist.currencies.length);
 
-    for (let currI in coinlist.currencies) {
-      let curr = coinlist.currencies[currI];
-      for (var i in curr.values.data) {
-        if (maxVal < Math.abs(curr.values.data[i].relative)) {
-          maxVal = Math.abs(curr.values.data[i].relative);
-        }
+    var maxVal = coinlist.currencies.reduce(function(a, b) {
+      return Math.max(a, b.values.maxRelative);
+    }, 0);
 
-        if (timeFrom > curr.values.timeFrom) {
-          timeFrom = curr.values.timeFrom;
-        }
+    var timeFrom = coinlist.currencies.reduce(function(a, b) {
+      return Math.min(a, b.values.timeFrom);
+    }, Number.MAX_VALUE);
 
-        if (timeTo < curr.values.timeTo) {
-          timeTo = curr.values.timeTo;
-        }
+    var timeTo = coinlist.currencies.reduce(function(a, b) {
+      return Math.max(a, b.values.timeTo);
+    }, 0);
 
-      }
-    }
-
-    //    console.log(timeFrom, timeTo);
     var scale = d3.scaleLinear()
       .domain([100 + maxVal, 100 - maxVal])
       .range([0, this.height]);
@@ -113,7 +95,7 @@ class DrawGraph {
       maxdate = new Date(timeTo * 1000 + 1);
 
     var scale2 = d3.scaleTime()
-      .domain([mindate, maxdate /* maxdate*/ ])
+      .domain([mindate, maxdate])
       .range([0, this.width]);
 
     var x = d3.scaleTime().range([0, this.width]);
@@ -128,11 +110,9 @@ class DrawGraph {
     this.svg.append("g").attr("transform", `translate(${this.startX}, ${this.height+ this.startY})`)
       .call(x_axis).selectAll("text")
       .style("text-anchor", "end").text(function(d) {
-        //        console.log(this.parentNode);
         var t = d3.select(this.parentNode).append("text").style("text-anchor", "end").attr("fill", "black").text(timeFormat(d).toString().split(" ")[0]).attr("dx", "-1.8em")
           .attr("dy", ".15em")
           .attr("transform", "rotate(-65)");
-        //      console.log(t);
         return timeFormat(d).toString().split(" ")[1];
       })
       .attr("dx", "-.8em")
