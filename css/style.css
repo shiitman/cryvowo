@@ -62,3 +62,43 @@
   position: absolute;
   z-index: 255;
 }
+
+.button {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.button:hover {
+  opacity: 1;
+}
+
+.buttonLabel {
+  pointer-events: none;
+}
+
+.grid line {
+  shape-rendering: crispEdges;
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.graph {
+  opacity: 0.99;
+  pointer-events: none;
+}
+
+.graph path {
+  pointer-events: stroke;
+}
+
+.graph circle {
+  pointer-events: auto;
+}
+
+.graph circle {
+  cursor: pointer;
+}

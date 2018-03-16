@@ -14,23 +14,20 @@ class Currency {
 
     var hoursOrMinutes = coinlist.hourOrMin;
 
-    if (this.conversion != this.name) {
-      coinlist.api.getHistorical(hoursOrMinutes, this.name, this.conversion, coinlist.valuesCount,
-        function(data) {
-          self.saveGraph(data, coinlist.graph);
-          coinlist.increaseCounter();
-        },
-        function() {
-          coinlist.increaseCounter();
-        },
-        0
-      );
-    } else {
-      coinlist.increaseCounter();
-    }
+    coinlist.api.getHistorical(hoursOrMinutes, this.name, this.conversion, coinlist.valuesCount,
+      function(data) {
+        self.saveGraph(data);
+        coinlist.increaseCounter();
+      },
+      function() {
+        coinlist.increaseCounter();
+      },
+      0
+    );
+
   }
 
-  saveGraph(data, drawObj) {
+  saveGraph(data) {
     var self = this;
     self.values = [];
     if (data.Response == "Error") {

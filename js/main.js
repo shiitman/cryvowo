@@ -18,7 +18,7 @@ class Main {
     this.coinList.getCoins($("#currencies"));
 
     this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
-    this.addCurrencies(this.loadCookie());
+    this.addCurrencies(this.loadStorage());
 
     this.updateCurrencyList();
     $("#control>#show12Hour").click();
@@ -50,31 +50,27 @@ class Main {
     $(`#currlist>#${newCurr}`).button();
   }
 
-  loadCookie() {
-    var cookie = Cookies.get("currencies");
-    if (!Cookies.get("currencies")) {
-      //      console.log(this.initialCurrencies)
-      //      console.log(this.initialCurrencies.join(","))
-
-      this.setCookie(this.initialCurrencies);
+  loadStorage() {
+    var storage = localStorage.getItem("currencies");
+    if (!storage) {
+      this.setStorage(this.initialCurrencies);
       return this.initialCurrencies;
     } else {
-      var array = cookie.split(",");
+      var array = storage.split(",");
       for (var i in array) {
         if (array[i].match(/(.*)\((.*)\).*/).length < 3) {
-          Cookies.remove("currencies");
-          loadCookie();
-          // something wrong with cookies, lets reset them
+          this.setStorage(this.initialCurrencies);
+          return this.initialCurrencies;
+          s
+          // something wrong in storage, lets reset it
         }
       }
       return array;
     }
   }
 
-  setCookie(array) {
-    Cookies.set("currencies", array.join(","), {
-      expires: 7
-    });
+  setStorage(array) {
+    localStorage.setItem("currencies", array.join(","));
   }
 
   updateCurrencyList() {
@@ -86,7 +82,7 @@ class Main {
         currencyNames.push($(this).data("longname") + `(${this.id})`);
       }
     );
-    this.setCookie(currencyNames);
+    this.setStorage(currencyNames);
     currString = currString.slice(0, -1);
     this.coinList.upgradeCurrList(currString);
     this.coinList.showLast();
