@@ -1,57 +1,104 @@
-﻿.no-close .ui-dialog-titlebar-close {
-    display: none;
+.no-close .ui-dialog-titlebar-close {
+  display: none;
 }
 
 .ui-dialog .ui-dialog-titlebar {
-    padding: 0em 0em;
-    position: relative;
+  padding: 0 0;
+  position: relative;
 }
 
 .ui-button {
-    padding: .2em 0.4em;
+  padding: .2em 0.4em;
 }
 
-#currencyWindow > fieldset {
-    float: left;
-    display: block;
-    width: 65%;
-    height: 70px;
+.currencyWindow>fieldset {
+  display: block;
+  float: left;
+  height: 70px;
+  width: 65%;
 }
 
-    #currencyWindow > fieldset > #currlist {
-        overflow: auto;
-        height: 60px;
-    }
-
-#addCurrency {
-    float: right;
-    min-width: 100px;
-    width: 100px;
+.currlist {
+  height: 60px;
+  overflow: auto;
 }
 
-#currency {
-    width: 80px;
+.addCurrency {
+  float: right;
+  min-width: 100px;
+  width: 100px;
 }
 
-#currlist span {
-    cursor: pointer;
-    display: inline-block;
-    margin-left: 10px;
-    padding: 4px;
+.currency {
+  width: 80px;
 }
 
-    #currlist span:hover {
-        color: #777777;
-    }
-
-#tools {
-    display: inline-block;
-    border: 1px solid black;
-    padding: 4px;
-    visibility: hidden;
+.currlist span {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 10px;
+  padding: 4px;
 }
 
-#donations {
-    position: absolute;
-    bottom: 10px;
+.currlist span:hover {
+  color: #777777;
+}
+
+.tools {
+  border: 1px solid black;
+  display: inline-block;
+  padding: 4px;
+  visibility: hidden;
+}
+
+.donations {
+  bottom: 10px;
+  position: absolute;
+}
+
+.tooltip {
+  background-color: white;
+  height: 30px;
+  position: absolute;
+  z-index: 255;
+}
+
+.button {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.button:hover {
+  opacity: 1;
+}
+
+.buttonLabel {
+  pointer-events: none;
+}
+
+.grid line {
+  shape-rendering: crispEdges;
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.graph {
+  opacity: 0.99;
+  pointer-events: none;
+}
+
+.graph path {
+  pointer-events: stroke;
+}
+
+.graph circle {
+  pointer-events: auto;
+}
+
+.graph circle {
+  cursor: pointer;
 }
