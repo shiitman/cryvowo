@@ -152,7 +152,7 @@ class DrawGraph {
       })
       .attr("class", "button")
       .on("click", function(d) {
-        self.svg.select(".graph." + d.name + " > path").node().dispatchEvent(new MouseEvent("click"));
+        self.svg.select(".graph.c_" + d.name + " > path").node().dispatchEvent(new MouseEvent("click"));
       });
 
     this.svg.selectAll("text.buttonLabel").data(coinlist.currencies).enter().append("text").attr("x", function(d, ind) {
@@ -177,20 +177,20 @@ class DrawGraph {
       });
 
     coinlist.currencies.forEach(function(curr, index) {
-      let g = self.svg.append("g").attr("class", "graph " + curr.name);
+      let g = self.svg.append("g").attr("class", "graph c_" + curr.name);
 
       g.append("path")
         .data([curr.values.data])
-        .attr("class", "path " + curr.name)
+        .attr("class", "path c_" + curr.name)
         .attr("d", valueline).attr("fill", "transparent")
         .attr("stroke", self.colors[index])
         .attr("transform", `translate(${self.startX},${self.startY})`)
         .on("click", selectClick)
         .moveToBack();
 
-      g.selectAll("circle ." + curr.name)
+      g.selectAll("circle .c_" + curr.name)
         .data(curr.values.data).enter().append("circle")
-        .attr("class", curr.name)
+        .attr("class", "c_" + curr.name)
         .attr("cx", function(d) {
           return scaleX(d.time * 1000);
         })
