@@ -11,6 +11,10 @@
   padding: .2em 0.4em;
 }
 
+.control {
+  float: left;
+}
+
 .currencyWindow>fieldset {
   display: block;
   float: left;
@@ -42,6 +46,11 @@
 
 .currlist span:hover {
   color: #777777;
+}
+
+.ui-widget .intervalLabel {
+  font-size: 0.6em;
+  width: 5em;
 }
 
 .tools {

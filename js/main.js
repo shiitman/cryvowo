@@ -1,15 +1,13 @@
 /*jshint esversion: 6 */
+
 class Main {
-  constructor() {
-    this.initialCurrencies = ["Bitcoin (BTC)", "Etherum (ETH)", "Litecoin (LTC)", "DigitalCash (DASH)", "Dogecoin (DOGE)"];
-  }
+  constructor() {}
 
   init() {
-    var winWidth = window.innerWidth * 0.8 - 60;
+    var winWidth = window.innerWidth * 0.8 - 110;
     var winHeight = window.innerHeight * 0.7 - 30;
 
-
-    var svg = d3.select("#raphaelCanvas").append("svg:svg").attr("id", "svg");
+    var svg = d3.select("#renderCanvas").append("svg:svg").attr("id", "svg");
     d3.select("svg").attr("width", (winWidth))
       .attr("height", (winHeight));
 
@@ -20,8 +18,11 @@ class Main {
     this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
     this.addCurrencies(this.loadStorage());
 
+    this.exchangeCurrency();
     this.updateCurrencyList();
-    $("#control>#show12Hour").click();
+
+    this.selectedTime();
+
   }
 
   addCurrencies(currArray) {
@@ -30,7 +31,28 @@ class Main {
       this.addCurrencyFromString(currArray[i]);
     }
   }
+  selectedTime() {
+    let timeInterval = localStorage.getItem("timeInterval");
+    if (!timeInterval) {
+      timeInterval = "show12Hour";
+      localStorage.setItem("timeInterval", "show12Hour");
+    }
+    $("#" + timeInterval).click();
 
+  }
+
+  exchangeCurrency() {
+    let exchangeCurr = localStorage.getItem("exchangeCurr");
+    if (!exchangeCurr) {
+      exchangeCurr = "show12Hour";
+      localStorage.setItem("exchangeCurr", "USD");
+    }
+    $("#chooseCurrency option").filter(function() {
+      return $(this).text() == exchangeCurr;
+    }).prop('selected', true);
+
+    this.coinList.convertTo = $("#chooseCurrency").val();
+  }
   addCurrencyFromString(str) {
     var self = this;
     var strings = str.match(/(.*)\((.*)\).*/);
@@ -45,6 +67,7 @@ class Main {
       $("#currlist>#" + newCurr).click(function() {
         this.remove();
         self.updateCurrencyList();
+        self.coinList.showLast();
       });
     }
     $(`#currlist>#${newCurr}`).button();
@@ -53,15 +76,14 @@ class Main {
   loadStorage() {
     var storage = localStorage.getItem("currencies");
     if (!storage) {
-      this.setStorage(this.initialCurrencies);
-      return this.initialCurrencies;
+      localStorage.setItem("currencies", initialCurrencies);
+      return initialCurrencies;
     } else {
       var array = storage.split(",");
       for (var i in array) {
         if (array[i].match(/(.*)\((.*)\).*/).length < 3) {
-          this.setStorage(this.initialCurrencies);
-          return this.initialCurrencies;
-          s
+          localStorage.setItem("currencies", initialCurrencies);
+          return initialCurrencies;
           // something wrong in storage, lets reset it
         }
       }
@@ -69,9 +91,6 @@ class Main {
     }
   }
 
-  setStorage(array) {
-    localStorage.setItem("currencies", array.join(","));
-  }
 
   updateCurrencyList() {
     var currString = "";
@@ -82,10 +101,10 @@ class Main {
         currencyNames.push($(this).data("longname") + `(${this.id})`);
       }
     );
-    this.setStorage(currencyNames);
+    localStorage.setItem("currencies", currencyNames);
+
     currString = currString.slice(0, -1);
     this.coinList.upgradeCurrList(currString);
-    this.coinList.showLast();
   }
 
   initInterface(graph, coinList, width, height) {
@@ -97,30 +116,23 @@ class Main {
     $("#currency").change(function() {
       self.addCurrencyFromString($("#currency").val());
       self.updateCurrencyList();
+      self.coinList.showLast();
       $("#currency").val("");
     });
-    $("#showHour").click(function() {
-      coinList.showLast("minute", 60);
-    });
-    $("#show12Hour").click(function() {
-      coinList.showLast("minute", 720);
-    });
-    $("#show24Hour").click(function() {
-      coinList.showLast("minute", 60 * 24);
-    });
-    $("#showWeek").click(function() {
-      coinList.showLast("hour", 168);
-    });
-    $("#showMonth").click(function() {
-      coinList.showLast("hour", 720);
-    });
-    $("#show3Month").click(function() {
-      coinList.showLast("day", 90);
-    });
-    $("#showYear").click(function() {
-      coinList.showLast("day", 365);
-    });
+
+    /*generate radio buttons*/
+    for (let i in buttonsList) {
+      $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
+      (function(i) {
+        $("#" + buttonsList[i].id).click(function() {
+          coinList.showLast(buttonsList[i].time, buttonsList[i].count);
+          localStorage.setItem("timeInterval", buttonsList[i].id);
+        });
+      })(i);
+    }
+
     $("#chooseCurrency").change(function() {
+      localStorage.setItem("exchangeCurr", $("#chooseCurrency").val());
       coinList.convertTo = $("#chooseCurrency").val();
       coinList.showLast();
     });
@@ -133,29 +145,21 @@ class Main {
       }
     });
 
-    let control = $("#control").dialog({
-      width: 80,
-      height: 350,
-      dialogClass: "no-close",
-      position: {
-        my: "left top",
-        at: "left top",
-        of: window
-      }
-    });
-
     let currency = $("#currencyWindow").dialog({
+      closeOnEscape: false,
       width: 600,
       height: 140,
       minWidth: 600,
       dialogClass: "no-close",
       position: {
         my: "left bottom",
-        at: "right top",
-        of: control
+        at: "left top",
+        of: window
       }
     });
-    let raphWin = $("#raphaelCanvas").dialog({
+
+    $("#renderCanvas").dialog({
+      closeOnEscape: false,
       width: width * 0.8,
       height: height * 0.77,
       dialogClass: "no-close",
@@ -166,11 +170,11 @@ class Main {
       },
     });
 
-    $("#addImg").detach().appendTo($("#raphaelCanvas").parent().children(".ui-dialog-titlebar"));
+    $("#addImg").detach().appendTo($("#renderCanvas").parent().children(".ui-dialog-titlebar"));
     $("#addImg").button();
 
     $("#currencyWindow").dialog();
-    $("#control").dialog();
+    //$("#control").dialog();
 
     $("#addImg").click(function() {
 
@@ -191,8 +195,6 @@ class Main {
 }
 
 $(document).ready(function() {
-  var worker = new CryptoWorker();
-  worker.startWorker();
   var main = new Main();
   main.init();
 });
