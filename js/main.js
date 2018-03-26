@@ -188,7 +188,7 @@ class Main {
       });
       a.href = (window.URL || webkitURL).createObjectURL(blob);
       a.click();
-      a.detach();
+      $(a).detach();
 
     });
   }
