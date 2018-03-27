@@ -61,8 +61,7 @@ class DrawGraph {
     console.log(currencies, size);
     for (let i = 0; i < size; i++) {
 
-      this.colors[i] = this.generateColor(currencies[i].longname + currencies[i].name + currencies[i].name); // "#" + sin_to_hex(i, 0, size) + sin_to_hex(i, Math.PI * 2 / 3, size) + sin_to_hex(i, Math.PI * 4 / 3, size);
-      console.log(this.colors[i]);
+      this.colors[i] = this.generateColor(currencies[i].name + currencies[i].name + currencies[i].name); // "#" + sin_to_hex(i, 0, size) + sin_to_hex(i, Math.PI * 2 / 3, size) + sin_to_hex(i, Math.PI * 4 / 3, size);
     }
   }
 
@@ -76,13 +75,13 @@ class DrawGraph {
     }
 
     var colors = [0x990000, 0x009900, 0x000099];
-    console.log(str, hash);
 
     hash = (hash) % (16777216 /*2097152 16777216*/ ); //
     for (let j = 0; j < 3; j++) {
       colors[j] = (((hash & colors[j]) >> (16 - j * 8)) + 0x22).toString(16);
       colors[j] = (colors[j].length == 1 ? "0" + colors[j] : colors[j]);
     }
+    console.log(str, "#" + (colors[0] + colors[1] + colors[2]));
     return ("#" + (colors[0] + colors[1] + colors[2]));
   }
 

@@ -57,7 +57,8 @@ class Main {
 
     if ($("#currlist>#" + newCurr).length === 0) {
       $("#currlist").append(`<span id="${newCurr}" data-longname="${currName}" title="${currName} - click to remove">${newCurr}</span>`);
-      $("#currlist>#" + newCurr).css("background-color", this.graph.generateColor(currName));
+      $("#currlist>#" + newCurr).css("background-color", this.graph.generateColor(newCurr + newCurr + newCurr));
+
       $("#currlist>#" + newCurr).click(function() {
         this.remove();
         self.updateCurrencyList();
@@ -103,6 +104,7 @@ class Main {
 
   initInterface(graph, coinList, width, height) {
     var self = this;
+    console.log($);
     $(window).resize(function(event) {
       if (event.target != window && $(event.target).find(".renderCanvas").length > 0) {
         self.resizeWindow(event.target);

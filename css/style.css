@@ -11,6 +11,16 @@
   padding: .2em 0.4em;
 }
 
+.currlist .ui-button {
+  color: black;
+  font-size: 80%;
+}
+
+.currlist .ui-button :hover {
+  color: white;
+  mix-blend-mode: difference;
+}
+
 .control {
   float: left;
 }
