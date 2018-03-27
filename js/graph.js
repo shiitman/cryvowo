@@ -69,6 +69,16 @@ class DrawGraph {
 
   drawGraph(coinlist) {
     var self = this;
+    if (coinlist) {
+      this.coinlist = coinlist;
+    }
+    if (!coinlist) {
+      coinlist = this.coinlist;
+    }
+    if (!coinlist) {
+      return;
+    }
+
     this.resetPaper();
 
     this.initColors(coinlist.currencies.length);

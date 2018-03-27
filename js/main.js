@@ -84,7 +84,7 @@ class Main {
         if (array[i].match(/(.*)\((.*)\).*/).length < 3) {
           localStorage.setItem("currencies", initialCurrencies);
           return initialCurrencies;
-          // something wrong in storage, lets reset it
+          // something wrong in storage
         }
       }
       return array;
@@ -109,10 +109,13 @@ class Main {
 
   initInterface(graph, coinList, width, height) {
     var self = this;
-    /*$(window).resize(function () {
-        initInterface(graph, coinList, window.innerWidth, window.innerHeight);
+    $(window).resize(function(event) {
+      if (event.target != window && $(event.target).find(".renderCanvas").length > 0) {
+        self.resizeWindow(event.target);
+      }
     });
-    */
+
+
     $("#currency").change(function() {
       self.addCurrencyFromString($("#currency").val());
       self.updateCurrencyList();
@@ -191,6 +194,10 @@ class Main {
       $(a).detach();
 
     });
+  }
+
+  resizeWindow(target) {
+    console.log(target);
   }
 }
 
