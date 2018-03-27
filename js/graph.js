@@ -25,10 +25,8 @@ class DrawGraph {
     this.buttonWidth = buttWidth;
     this.buttonHeight = buttHeight;
 
-    this.height = height;
-    this.width = width;
-    this.textRectSide = 50;
-    this.timeStampsCount = 20;
+    this.height = height - startY * 2 - 10;
+    this.width = width - startX - 10;
 
     this.div = d3.select("body").append("div")
       .attr("class", "tooltip")
@@ -36,13 +34,17 @@ class DrawGraph {
     this.resetPaper();
   }
 
-  resizePaper(x, y, w, h) {
-    this.startX = x;
-    this.startY = y;
-    this.height = h;
-    this.width = w;
+  resize(startX, startY, buttonY, buttWidth, buttHeight, width, height) {
+    this.startX = startX;
+    this.startY = startY;
+    this.buttonY = buttonY;
+    this.buttonWidth = buttWidth;
+    this.buttonHeight = buttHeight;
 
-    this.resetGraph();
+    this.height = height - startY * 2 - 10;
+    this.width = width - startX - 10;
+
+    this.drawGraph();
   }
 
   resetPaper() {
@@ -54,18 +56,36 @@ class DrawGraph {
     this.svg.selectAll("*").remove();
   }
 
-  initColors(size) {
-    var sin_to_hex = function(i, phase, size) {
-      var sin = Math.sin(Math.PI / size * 2 * i + phase);
-      var int = Math.floor(sin * 127) + 128;
-      var hex = int.toString(16);
-      return hex.length === 1 ? "0" + hex : hex;
-    };
+  initColors(currencies, size) {
 
-    for (var i = 0; i < size; i++) {
-      this.colors[i] = "#" + sin_to_hex(i, 0, size) + sin_to_hex(i, Math.PI * 2 / 3, size) + sin_to_hex(i, Math.PI * 4 / 3, size);
+    console.log(currencies, size);
+    for (let i = 0; i < size; i++) {
+
+      this.colors[i] = this.generateColor(currencies[i].longname + currencies[i].name + currencies[i].name); // "#" + sin_to_hex(i, 0, size) + sin_to_hex(i, Math.PI * 2 / 3, size) + sin_to_hex(i, Math.PI * 4 / 3, size);
+      console.log(this.colors[i]);
     }
   }
+
+  generateColor(str) {
+    let hash = 0;
+    if (str.length == 0) return hash;
+    for (let i = 0; i < str.length; i++) {
+      let char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+
+    var colors = [0x990000, 0x009900, 0x000099];
+    console.log(str, hash);
+
+    hash = (hash) % (16777216 /*2097152 16777216*/ ); //
+    for (let j = 0; j < 3; j++) {
+      colors[j] = (((hash & colors[j]) >> (16 - j * 8)) + 0x22).toString(16);
+      colors[j] = (colors[j].length == 1 ? "0" + colors[j] : colors[j]);
+    }
+    return ("#" + (colors[0] + colors[1] + colors[2]));
+  }
+
 
   drawGraph(coinlist) {
     var self = this;
@@ -75,13 +95,13 @@ class DrawGraph {
     if (!coinlist) {
       coinlist = this.coinlist;
     }
-    if (!coinlist) {
+    if (!coinlist || coinlist.isLoading) {
       return;
     }
 
     this.resetPaper();
 
-    this.initColors(coinlist.currencies.length);
+    this.initColors(coinlist.currencies, coinlist.currencies.length);
 
     var maxVal = coinlist.currencies.reduce(function(a, b) {
       return Math.max(a, b.values.maxRelative);
@@ -146,7 +166,7 @@ class DrawGraph {
       if (d3.select(this.parentNode).style("opacity") == 1) {
         d3.selectAll(".graph").style("opacity", 0.99);
       } else {
-        d3.selectAll(".graph").style("opacity", 0.4);
+        d3.selectAll(".graph").style("opacity", 0.1);
         d3.select(this.parentNode).style("opacity", 1).moveToFront();
       }
     };
@@ -166,16 +186,22 @@ class DrawGraph {
       });
 
     this.svg.selectAll("text.buttonLabel").data(coinlist.currencies).enter().append("text").attr("x", function(d, ind) {
-      return self.startX + ind * self.buttonWidth + self.buttonWidth * 0.5;
-    }).attr("y", self.buttonY + self.buttonHeight * 0.6).text(function(d) {
-      return d.name;
-    }).attr("class", "buttonLabel").attr("font-size", self.buttonHeight * 0.6).attr("text-anchor", "middle");
+        return self.startX + ind * self.buttonWidth + self.buttonWidth * 0.5;
+      }).attr("fill", function(d, ind) {
+        return self.colors[ind];
+      })
+      .attr("y", self.buttonY + self.buttonHeight * 0.6).text(function(d) {
+        return d.name;
+      }).attr("class", "buttonLabel").attr("font-size", self.buttonHeight * 0.6).attr("text-anchor", "middle");
 
-    this.svg.selectAll("text.captions").data(coinlist.currencies).enter().append("text").attr("x", function(d, ind) {
-      return self.startX + ind * self.buttonWidth + self.buttonWidth * 0.5;
-    }).attr("y", self.buttonY + self.buttonHeight * 0.6 * 2).text(function(d) {
-      return d.values.data[d.values.data.length - 1].close;
-    }).attr("class", "buttonLabel").attr("font-size", self.buttonHeight * 0.6).attr("text-anchor", "middle");
+    this.svg.selectAll("text.caption").data(coinlist.currencies).enter().append("text").attr("x", function(d, ind) {
+        return self.startX + ind * self.buttonWidth + self.buttonWidth * 0.5;
+      }).attr("y", self.buttonY + self.buttonHeight * 0.6 * 2).text(function(d) {
+        return d.values.data[d.values.data.length - 1].close;
+      }).attr("class", "buttonLabel caption").attr("fill", function(d, ind) {
+        return self.colors[ind];
+      })
+      .attr("font-size", self.buttonHeight * 0.6).attr("text-anchor", "middle");
 
     //drawgraph
     var valueline = d3.line()
@@ -188,7 +214,7 @@ class DrawGraph {
 
     coinlist.currencies.forEach(function(curr, index) {
       let g = self.svg.append("g").attr("class", "graph c_" + curr.name);
-
+      //  console.log(self.generateColor(curr.name));
       g.append("path")
         .data([curr.values.data])
         .attr("class", "path c_" + curr.name)

@@ -74,7 +74,7 @@
 
 .button {
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.9;
 }
 
 .button:hover {
@@ -83,6 +83,8 @@
 
 .buttonLabel {
   pointer-events: none;
+  mix-blend-mode: difference;
+  color: white;
 }
 
 .grid line {
@@ -110,4 +112,8 @@
 
 .graph circle {
   cursor: pointer;
+}
+
+svg {
+  border: 1px solid black;
 }

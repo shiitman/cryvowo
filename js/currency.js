@@ -1,16 +1,17 @@
 /*jshint esversion: 6 */
 class Currency {
-  constructor(name, conv) {
+  constructor(name, conv, long = null) {
     this.name = name;
+    this.longname = long || name;
     this.conversion = conv;
-    this.index = 0;
+    //    this.index = 0;
     this.counter = 0;
     self.values = [];
   }
 
   getHistoricLast(coinlist, ind) {
     var self = this;
-    this.index = ind;
+    //this.index = ind;
 
     var hoursOrMinutes = coinlist.hourOrMin;
 

@@ -3,7 +3,7 @@
 class Coinlist {
   constructor(graph) {
     this.myCurr = [];
-    this.graph = graph;
+    this.graph = null;
     this.currencies = [];
     this.hourOrMin = "minute";
     this.counter = 0;
@@ -33,13 +33,16 @@ class Coinlist {
     });
   }
 
-  showLast(hourOrMin = null, valuesCount = null) {
+  showLast(graph, hourOrMin = null, valuesCount = null) {
     var self = this;
+
     if (!this.isLoading) {
       this.isLoading = true;
     } else {
       return;
     }
+
+    this.graph = graph || this.graph;
 
     if (this.interval) {
       clearInterval(this.interval);
@@ -75,7 +78,7 @@ class Coinlist {
     }
     if (this.hourOrMin != "day") {
       this.interval = setInterval(function() {
-        self.showLast();
+        self.showLast(graph);
       }, timeout);
     }
   }
@@ -83,9 +86,9 @@ class Coinlist {
   increaseCounter() {
     this.counter++;
     if (this.counter >= this.myCurr.length) {
+      this.isLoading = false;
       this.graph.drawGraph(this, this.hourOrMin, this.valuesCount);
       this.counter = 0;
-      this.isLoading = false;
     }
   }
 }

@@ -4,15 +4,8 @@ class Main {
   constructor() {}
 
   init() {
-    var winWidth = window.innerWidth * 0.8 - 110;
-    var winHeight = window.innerHeight * 0.7 - 30;
 
-    var svg = d3.select("#renderCanvas").append("svg:svg").attr("id", "svg");
-    d3.select("svg").attr("width", (winWidth))
-      .attr("height", (winHeight));
-
-    this.graph = new DrawGraph(svg, 50, 45, 5, 100, 20, winWidth - 40, winHeight - 100);
-    this.coinList = new Coinlist(this.graph);
+    this.coinList = new Coinlist();
     this.coinList.getCoins($("#currencies"));
 
     this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
@@ -64,10 +57,11 @@ class Main {
 
     if ($("#currlist>#" + newCurr).length === 0) {
       $("#currlist").append(`<span id="${newCurr}" data-longname="${currName}" title="${currName} - click to remove">${newCurr}</span>`);
+      $("#currlist>#" + newCurr).css("background-color", this.graph.generateColor(currName));
       $("#currlist>#" + newCurr).click(function() {
         this.remove();
         self.updateCurrencyList();
-        self.coinList.showLast();
+        self.coinList.showLast(self.graph);
       });
     }
     $(`#currlist>#${newCurr}`).button();
@@ -119,7 +113,7 @@ class Main {
     $("#currency").change(function() {
       self.addCurrencyFromString($("#currency").val());
       self.updateCurrencyList();
-      self.coinList.showLast();
+      self.coinList.showLast(self.graph);
       $("#currency").val("");
     });
 
@@ -128,7 +122,7 @@ class Main {
       $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
       (function(i) {
         $("#" + buttonsList[i].id).click(function() {
-          coinList.showLast(buttonsList[i].time, buttonsList[i].count);
+          coinList.showLast(self.graph, buttonsList[i].time, buttonsList[i].count);
           localStorage.setItem("timeInterval", buttonsList[i].id);
         });
       })(i);
@@ -137,7 +131,7 @@ class Main {
     $("#chooseCurrency").change(function() {
       localStorage.setItem("exchangeCurr", $("#chooseCurrency").val());
       coinList.convertTo = $("#chooseCurrency").val();
-      coinList.showLast();
+      coinList.showLast(self.graph);
     });
 
 
@@ -161,10 +155,12 @@ class Main {
       }
     });
 
+    let winWidth = window.innerWidth * 0.8;
+    let winHeight = window.innerHeight * 0.77;
     $("#renderCanvas").dialog({
       closeOnEscape: false,
-      width: width * 0.8,
-      height: height * 0.77,
+      width: winWidth,
+      height: winHeight,
       dialogClass: "no-close",
       position: {
         my: "left top",
@@ -173,7 +169,12 @@ class Main {
       },
     });
 
-    $("#addImg").detach().appendTo($("#renderCanvas").parent().children(".ui-dialog-titlebar"));
+    var svg = d3.select("#renderCanvas").append("svg:svg").attr("id", "svg");
+    d3.select("svg").attr("width", (winWidth - 110))
+      .attr("height", (winHeight - 50));
+    this.graph = new DrawGraph(svg, 50, 55, 5, 100, 20, winWidth - 110, winHeight - 50);
+
+    $("#addImg").detach().appendTo($("#renderCanvas").parent().find(".ui-dialog-titlebar>.ui-dialog-title"));
     $("#addImg").button();
 
     $("#currencyWindow").dialog();
@@ -197,7 +198,10 @@ class Main {
   }
 
   resizeWindow(target) {
-    console.log(target);
+    d3.select("svg").attr("width", ($(target).width() - 110))
+      .attr("height", ($(target).height() - 50));
+    this.graph.resize(50, 55, 5, 100, 20, $(target).width() - 110, $(target).height() - 50);
+
   }
 }
 
