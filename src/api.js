@@ -19,7 +19,7 @@ class CurrencyAPI {
         if (counter < 5) {
           setTimeout(
             function() {
-              console.log(self.name,  counter + " try");
+              console.log(self.name, counter + " try");
               self.getHistorical(hoursOrMinutes, name, conversion, valuesCount, processFunction, cancelFunction, counter + 1);
             }, 1000
           );
@@ -39,8 +39,7 @@ class CurrencyAPI {
   getCoins() {
     return fetch("https://min-api.cryptocompare.com/data/all/coinlist").then(function(response) {
       return response.json();
-      }
-    );
+    });
   }
 
   always1(hoursOrMinutes, valuesCount) {

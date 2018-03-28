@@ -11,7 +11,7 @@ class Main {
       console.log(data)
       var keys = Object.keys(data.Data);
       for (var i = 0; i < keys.length; i++) {
-           console.log(keys[i]);
+        console.log(keys[i]);
         $("#currencies").append(`<option value='${data.Data[keys[i]].FullName}'></option>`);
       }
     })
@@ -65,7 +65,7 @@ class Main {
 
     if ($("#currlist>#" + newCurr).length === 0) {
       $("#currlist").append(`<span id="${newCurr}" data-longname="${currName}" title="${currName} - click to remove">${newCurr}</span>`);
-      $("#currlist>#" + newCurr).css("background-color", this.graph.generateColor(newCurr + newCurr + newCurr));
+      $("#currlist>#" + newCurr).css("background-color", this.graph.generateColor(newCurr + "/"+ newCurr));
 
       $("#currlist>#" + newCurr).click(function() {
         this.remove();
@@ -160,7 +160,7 @@ class Main {
       }
     });
 
-    let winWidth = window.innerWidth * 0.8;
+    let winWidth = window.innerWidth * 0.9;
     let winHeight = window.innerHeight * 0.77;
     $("#renderCanvas").dialog({
       closeOnEscape: false,
@@ -175,8 +175,9 @@ class Main {
     });
 
     var svg = d3.select("#renderCanvas").append("svg:svg").attr("id", "svg");
-    d3.select("svg").attr("width", (winWidth - 110)).attr("height", (winHeight - 50));
-    this.graph = new DrawGraph(svg, 50, 55, 5, 100, 20, winWidth - 110, winHeight - 50);
+    d3.select("svg").attr("width", (winWidth - 150)).attr("height", (winHeight - 50));
+
+    this.graph = new DrawGraph(svg, 50, 55, 5, 100, 20, winWidth - 155, winHeight - 50);
 
     $("#addImg").detach().appendTo($("#renderCanvas").parent().find(".ui-dialog-titlebar>.ui-dialog-title"));
     $("#addImg").button();
@@ -191,7 +192,9 @@ class Main {
       let a = document.createElement('a');
       a.download = 'cryptochart.svg';
       a.type = 'image/svg+xml';
-      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {"type": "image/svg+xml"});
+      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {
+        "type": "image/svg+xml"
+      });
       a.href = (window.URL || webkitURL).createObjectURL(blob);
       a.click();
       $(a).detach();

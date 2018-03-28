@@ -21,7 +21,7 @@ var buttonsList = [{
     time: "minute",
     count: 1440,
     caption: "24 Hours"
-  },
+  }, 
   {
     id: "showWeek",
     time: "hour",

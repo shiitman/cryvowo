@@ -19,7 +19,7 @@ class Currency {
       self.saveGraph(data);
       coinlist.increaseCounter();
     }, function() {
-        coinlist.increaseCounter();
+      coinlist.increaseCounter();
     }, 0);
 
   }
