@@ -61,7 +61,7 @@ class DrawGraph {
     console.log(currencies, size);
     for (let i = 0; i < size; i++) {
 
-      this.colors[i] = this.generateColor(currencies[i].name + currencies[i].name + currencies[i].name); // "#" + sin_to_hex(i, 0, size) + sin_to_hex(i, Math.PI * 2 / 3, size) + sin_to_hex(i, Math.PI * 4 / 3, size);
+      this.colors[i] = this.generateColor(currencies[i].name +"/"+ currencies[i].name);
     }
   }
 
@@ -70,7 +70,7 @@ class DrawGraph {
     if (str.length == 0) return hash;
     for (let i = 0; i < str.length; i++) {
       let char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+         hash = ((hash << 5) - hash) + char;
       hash = hash & hash; // Convert to 32bit integer
     }
 
@@ -81,7 +81,7 @@ class DrawGraph {
       colors[j] = (((hash & colors[j]) >> (16 - j * 8)) + 0x22).toString(16);
       colors[j] = (colors[j].length == 1 ? "0" + colors[j] : colors[j]);
     }
-    console.log(str, "#" + (colors[0] + colors[1] + colors[2]));
+    console.log(str,   "#" + (colors[0] + colors[1] + colors[2]));
     return ("#" + (colors[0] + colors[1] + colors[2]));
   }
 
@@ -241,7 +241,7 @@ class DrawGraph {
           self.div.transition()
             .duration(200).style("display", "block")
             .style("opacity", 0.9);
-          self.div.html(d.close + " " + coinlist.convertTo + "<br \>" + timeFormat(new Date(d.time * 1000)))
+          self.div.html(coinlist[index].name+ "<br \>"+d.close + " " + coinlist.convertTo + "<br \>" + timeFormat(new Date(d.time * 1000)))
             .style("position", "absolute")
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 45) + "px");

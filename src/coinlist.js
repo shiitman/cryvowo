@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 class Coinlist {
-  constructor(graph) {
+  constructor(api) {
     this.myCurr = [];
     this.graph = null;
     this.currencies = [];
@@ -10,7 +10,7 @@ class Coinlist {
     this.convertTo = "USD";
     this.valuesCount = 720;
     this.isLoading = false;
-    this.api = new CurrencyAPI();
+    this.api = api;
   }
 
   upgradeCurrList(str) {
@@ -23,15 +23,6 @@ class Coinlist {
     });
   }
 
-  getCoins(datalist) {
-    $.ajax("https://min-api.cryptocompare.com/data/all/coinlist").done(function(data) {
-      var keys = Object.keys(data.Data);
-      for (var i = 0; i < keys.length; i++) {
-        //   console.log(keys[i]);
-        datalist.append(`<option value='${data.Data[keys[i]].FullName}'></option>`);
-      }
-    });
-  }
 
   showLast(graph, hourOrMin = null, valuesCount = null) {
     var self = this;

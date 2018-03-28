@@ -1,7 +1,9 @@
 /*jshint esversion: 6 */
 
 class CurrencyAPI {
-  constructor() {}
+  constructor() {
+
+  }
   getHistorical(hoursOrMinutes, name, conversion, valuesCount, processFunction, cancelFunction, counter = 0) {
     var self = this;
     if (name == conversion) {
@@ -9,14 +11,17 @@ class CurrencyAPI {
       processFunction(data);
       return;
     }
-    $.ajax("https://min-api.cryptocompare.com/data/histo" + hoursOrMinutes + "?fsym=" + name + "&tsym=" + conversion + "&limit=" + valuesCount).done(function(data) {
+    fetch("https://min-api.cryptocompare.com/data/histo" + hoursOrMinutes + "?fsym=" + name + "&tsym=" + conversion + "&limit=" + valuesCount).then(function(response) {
+      return response.json();
+    }).then(function(data) {
+      //  console.log(data.Response);
       if (data.Response == "Error") {
         if (counter < 5) {
           setTimeout(
             function() {
-              console.log(self.name, counter + " try");
+              console.log(self.name,  counter + " try");
               self.getHistorical(hoursOrMinutes, name, conversion, valuesCount, processFunction, cancelFunction, counter + 1);
-            }, 1500
+            }, 1000
           );
         } else {
           cancelFunction();
@@ -25,6 +30,17 @@ class CurrencyAPI {
         processFunction(data);
       }
     });
+  }
+
+  getCurrent() {
+
+  }
+
+  getCoins() {
+    return fetch("https://min-api.cryptocompare.com/data/all/coinlist").then(function(response) {
+      return response.json();
+      }
+    );
   }
 
   always1(hoursOrMinutes, valuesCount) {
@@ -53,7 +69,6 @@ class CurrencyAPI {
       ]
     };
     return data;
-
   }
 
 

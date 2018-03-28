@@ -4,8 +4,10 @@ Relative price fluctuations can be displayed on the same graph.
 
 ## Coming features
 ### Drawing
-1. Tools for free-hand drawing of stock figures
-2. Auto-detection of stock figures
+1. Multiple graphs, drag and drop support.
+2. NVT Ratio
+3. Free-hand drawing of stock figures
+4. Auto-detection of stock figures
 
 ### Portfolio tools
 Custom format for portfolio storing.

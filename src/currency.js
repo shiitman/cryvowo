@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 class Currency {
   constructor(name, conv, long = null) {
     this.name = name;
@@ -15,16 +15,12 @@ class Currency {
 
     var hoursOrMinutes = coinlist.hourOrMin;
 
-    coinlist.api.getHistorical(hoursOrMinutes, this.name, this.conversion, coinlist.valuesCount,
-      function(data) {
-        self.saveGraph(data);
+    coinlist.api.getHistorical(hoursOrMinutes, this.name, this.conversion, coinlist.valuesCount, function(data) {
+      self.saveGraph(data);
+      coinlist.increaseCounter();
+    }, function() {
         coinlist.increaseCounter();
-      },
-      function() {
-        coinlist.increaseCounter();
-      },
-      0
-    );
+    }, 0);
 
   }
 

@@ -1,12 +1,20 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 
 class Main {
   constructor() {}
 
   init() {
+    this.api = new CurrencyAPI();
 
-    this.coinList = new Coinlist();
-    this.coinList.getCoins($("#currencies"));
+    this.coinList = new Coinlist(this.api);
+    this.api.getCoins().then(function(data) {
+      console.log(data)
+      var keys = Object.keys(data.Data);
+      for (var i = 0; i < keys.length; i++) {
+           console.log(keys[i]);
+        $("#currencies").append(`<option value='${data.Data[keys[i]].FullName}'></option>`);
+      }
+    })
 
     this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
     this.addCurrencies(this.loadStorage());
@@ -15,7 +23,6 @@ class Main {
     this.updateCurrencyList();
 
     this.selectedTime();
-
   }
 
   addCurrencies(currArray) {
@@ -24,6 +31,7 @@ class Main {
       this.addCurrencyFromString(currArray[i]);
     }
   }
+
   selectedTime() {
     let timeInterval = localStorage.getItem("timeInterval");
     if (!timeInterval) {
@@ -86,16 +94,13 @@ class Main {
     }
   }
 
-
   updateCurrencyList() {
     var currString = "";
     var currencyNames = [];
-    $("#currlist>span").each(
-      function() {
-        currString += this.id + ",";
-        currencyNames.push($(this).data("longname") + `(${this.id})`);
-      }
-    );
+    $("#currlist>span").each(function() {
+      currString += this.id + ",";
+      currencyNames.push($(this).data("longname") + `(${this.id})`);
+    });
     localStorage.setItem("currencies", currencyNames);
 
     currString = currString.slice(0, -1);
@@ -111,7 +116,6 @@ class Main {
       }
     });
 
-
     $("#currency").change(function() {
       self.addCurrencyFromString($("#currency").val());
       self.updateCurrencyList();
@@ -119,7 +123,7 @@ class Main {
       $("#currency").val("");
     });
 
-    /*generate radio buttons*/
+    /* generate radio buttons */
     for (let i in buttonsList) {
       $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
       (function(i) {
@@ -135,7 +139,6 @@ class Main {
       coinList.convertTo = $("#chooseCurrency").val();
       coinList.showLast(self.graph);
     });
-
 
     $("#control>input").checkboxradio({
       icon: false,
@@ -168,12 +171,11 @@ class Main {
         my: "left top",
         at: "left bottom",
         of: currency
-      },
+      }
     });
 
     var svg = d3.select("#renderCanvas").append("svg:svg").attr("id", "svg");
-    d3.select("svg").attr("width", (winWidth - 110))
-      .attr("height", (winHeight - 50));
+    d3.select("svg").attr("width", (winWidth - 110)).attr("height", (winHeight - 50));
     this.graph = new DrawGraph(svg, 50, 55, 5, 100, 20, winWidth - 110, winHeight - 50);
 
     $("#addImg").detach().appendTo($("#renderCanvas").parent().find(".ui-dialog-titlebar>.ui-dialog-title"));
@@ -189,9 +191,7 @@ class Main {
       let a = document.createElement('a');
       a.download = 'cryptochart.svg';
       a.type = 'image/svg+xml';
-      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {
-        "type": "image/svg+xml"
-      });
+      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {"type": "image/svg+xml"});
       a.href = (window.URL || webkitURL).createObjectURL(blob);
       a.click();
       $(a).detach();
@@ -200,8 +200,7 @@ class Main {
   }
 
   resizeWindow(target) {
-    d3.select("svg").attr("width", ($(target).width() - 110))
-      .attr("height", ($(target).height() - 50));
+    d3.select("svg").attr("width", ($(target).width() - 110)).attr("height", ($(target).height() - 50));
     this.graph.resize(50, 55, 5, 100, 20, $(target).width() - 110, $(target).height() - 50);
 
   }
