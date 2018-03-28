@@ -14,6 +14,7 @@
 .currlist .ui-button {
   color: black;
   font-size: 80%;
+  min-width: 60px;
 }
 
 .currlist .ui-button :hover {
@@ -79,7 +80,7 @@
   background-color: white;
   position: absolute;
   z-index: 255;
-  border:1px solid black;
+  border: 1px solid black;
 }
 
 .button {

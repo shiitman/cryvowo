@@ -1,40 +1,26 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 
 class CurrencyAPI {
-  constructor() {
-
-  }
-  getHistorical(hoursOrMinutes, name, conversion, valuesCount, processFunction, cancelFunction, counter = 0) {
+  constructor() {}
+  getHistorical(hoursOrMinutes, name, conversion, valuesCount, counter = 0) {
     var self = this;
     if (name == conversion) {
-      let data = this.always1(hoursOrMinutes, valuesCount);
-      processFunction(data);
-      return;
+      return Promise.resolve(self.always1(hoursOrMinutes, valuesCount));
     }
-    fetch("https://min-api.cryptocompare.com/data/histo" + hoursOrMinutes + "?fsym=" + name + "&tsym=" + conversion + "&limit=" + valuesCount).then(function(response) {
+    return fetch("https://min-api.cryptocompare.com/data/histo" + hoursOrMinutes + "?fsym=" + name + "&tsym=" + conversion + "&limit=" + valuesCount).then(function(response) {
       return response.json();
     }).then(function(data) {
-      //  console.log(data.Response);
       if (data.Response == "Error") {
         if (counter < 5) {
-          setTimeout(
-            function() {
-              console.log(self.name, counter + " try");
-              self.getHistorical(hoursOrMinutes, name, conversion, valuesCount, processFunction, cancelFunction, counter + 1);
-            }, 1000
-          );
-        } else {
-          cancelFunction();
+          return self.getHistorical(hoursOrMinutes, name, conversion, valuesCount, counter + 1);
         }
       } else {
-        processFunction(data);
+        return (data);
       }
     });
   }
 
-  getCurrent() {
-
-  }
+  getCurrent() {}
 
   getCoins() {
     return fetch("https://min-api.cryptocompare.com/data/all/coinlist").then(function(response) {
@@ -57,11 +43,11 @@ class CurrencyAPI {
     var data = {
       TimeTo: currentTime,
       TimeFrom: timeFrom,
-      Data: [{
+      Data: [
+        {
           close: 1,
           time: timeFrom
-        },
-        {
+        }, {
           close: 1,
           time: currentTime
         }
@@ -69,7 +55,5 @@ class CurrencyAPI {
     };
     return data;
   }
-
-
 
 }

@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 
 class Coinlist {
   constructor(api) {
@@ -22,7 +22,6 @@ class Coinlist {
       }
     });
   }
-
 
   showLast(graph, hourOrMin = null, valuesCount = null) {
     var self = this;
@@ -61,12 +60,12 @@ class Coinlist {
       timeout = 60000 - Date.now() % 60000;
       if (timeout == 0)
         timeout += 60000;
-    }
+      }
     if (this.hourOrMin == "hour") {
       timeout = 3600000 - Date.now() % 3600000;
       if (timeout == 0)
         timeout += 3600000;
-    }
+      }
     if (this.hourOrMin != "day") {
       this.interval = setInterval(function() {
         self.showLast(graph);

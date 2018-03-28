@@ -1,5 +1,11 @@
 /* jshint esversion: 6 */
 
+
+ // TODO: Add promises everywhere
+ // TODO: Clean unnecessary jQuery
+ // TODO: Multiple windows
+
+
 class Main {
   constructor() {}
 
@@ -7,22 +13,21 @@ class Main {
     this.api = new CurrencyAPI();
 
     this.coinList = new Coinlist(this.api);
+
     this.api.getCoins().then(function(data) {
-      console.log(data)
       var keys = Object.keys(data.Data);
       for (var i = 0; i < keys.length; i++) {
-        console.log(keys[i]);
         $("#currencies").append(`<option value='${data.Data[keys[i]].FullName}'></option>`);
       }
     })
 
-    this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
     this.addCurrencies(this.loadStorage());
-
     this.exchangeCurrency();
     this.updateCurrencyList();
-
     this.selectedTime();
+
+    this.initInterface(this.graph, this.coinList, window.innerWidth, window.innerHeight);
+
   }
 
   addCurrencies(currArray) {
@@ -38,8 +43,6 @@ class Main {
       timeInterval = "show12Hour";
       localStorage.setItem("timeInterval", "show12Hour");
     }
-    $("#" + timeInterval).click();
-
   }
 
   exchangeCurrency() {
@@ -65,7 +68,7 @@ class Main {
 
     if ($("#currlist>#" + newCurr).length === 0) {
       $("#currlist").append(`<span id="${newCurr}" data-longname="${currName}" title="${currName} - click to remove">${newCurr}</span>`);
-      $("#currlist>#" + newCurr).css("background-color", this.graph.generateColor(newCurr + "/"+ newCurr));
+      $("#currlist>#" + newCurr).css("background-color", DrawGraph.generateColor(newCurr + "/" + newCurr));
 
       $("#currlist>#" + newCurr).click(function() {
         this.remove();
@@ -79,7 +82,7 @@ class Main {
   loadStorage() {
     var storage = localStorage.getItem("currencies");
     if (!storage) {
-      localStorage.setItem("currencies", initialCurrencies);
+      localStorage.setItem("currencies", ["Bitcoin (BTC)", "Etherum (ETH)", "Litecoin (LTC)", "DigitalCash (DASH)", "Dogecoin (DOGE)"]);
       return initialCurrencies;
     } else {
       var array = storage.split(",");
@@ -87,7 +90,6 @@ class Main {
         if (array[i].match(/(.*)\((.*)\).*/).length < 3) {
           localStorage.setItem("currencies", initialCurrencies);
           return initialCurrencies;
-          // something wrong in storage
         }
       }
       return array;
@@ -109,7 +111,6 @@ class Main {
 
   initInterface(graph, coinList, width, height) {
     var self = this;
-    console.log($);
     $(window).resize(function(event) {
       if (event.target != window && $(event.target).find(".renderCanvas").length > 0) {
         self.resizeWindow(event.target);
@@ -124,27 +125,35 @@ class Main {
     });
 
     /* generate radio buttons */
-    for (let i in buttonsList) {
-      $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
-      (function(i) {
-        $("#" + buttonsList[i].id).click(function() {
-          coinList.showLast(self.graph, buttonsList[i].time, buttonsList[i].count);
-          localStorage.setItem("timeInterval", buttonsList[i].id);
-        });
-      })(i);
-    }
+    fetch("/settings/buttonList.json").then(function(resolved) {
+      return resolved.json();
+    }).then(function(buttonsList) {
+      console.log(buttonsList);
+      for (let i in buttonsList) {
+        $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
+        (function(i) {
+          $("#" + buttonsList[i].id).click(function() {
+            coinList.showLast(self.graph, buttonsList[i].time, buttonsList[i].count);
+            localStorage.setItem("timeInterval", buttonsList[i].id);
+          });
+        })(i);
+
+      }
+      $("#control>input").checkboxradio({
+        icon: false,
+        classes: {
+          "ui-checkboxradio": "highlight"
+        }
+      });
+
+      $("#" + localStorage.getItem("timeInterval")).click();
+
+    });
 
     $("#chooseCurrency").change(function() {
       localStorage.setItem("exchangeCurr", $("#chooseCurrency").val());
       coinList.convertTo = $("#chooseCurrency").val();
       coinList.showLast(self.graph);
-    });
-
-    $("#control>input").checkboxradio({
-      icon: false,
-      classes: {
-        "ui-checkboxradio": "highlight"
-      }
     });
 
     let currency = $("#currencyWindow").dialog({
@@ -192,9 +201,7 @@ class Main {
       let a = document.createElement('a');
       a.download = 'cryptochart.svg';
       a.type = 'image/svg+xml';
-      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {
-        "type": "image/svg+xml"
-      });
+      var blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + serializer.serializeToString($("#svg")[0])], {"type": "image/svg+xml"});
       a.href = (window.URL || webkitURL).createObjectURL(blob);
       a.click();
       $(a).detach();

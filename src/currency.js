@@ -15,13 +15,12 @@ class Currency {
 
     var hoursOrMinutes = coinlist.hourOrMin;
 
-    coinlist.api.getHistorical(hoursOrMinutes, this.name, this.conversion, coinlist.valuesCount, function(data) {
+    coinlist.api.getHistorical(hoursOrMinutes, this.name, this.conversion, coinlist.valuesCount).then(function(data) {
       self.saveGraph(data);
       coinlist.increaseCounter();
-    }, function() {
+    }).catch(function() {
       coinlist.increaseCounter();
-    }, 0);
-
+    });
   }
 
   saveGraph(data) {
