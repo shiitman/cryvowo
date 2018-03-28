@@ -241,10 +241,11 @@ class DrawGraph {
           self.div.transition()
             .duration(200).style("display", "block")
             .style("opacity", 0.9);
-          self.div.html(coinlist[index].name + "<br \>" + d.close + " " + coinlist.convertTo + "<br \>" + timeFormat(new Date(d.time * 1000)))
+
+          self.div.html(coinlist.currencies[index].name + "<br \>" + d.close + " " + coinlist.convertTo + "<br \>" + timeFormat(new Date(d.time * 1000)))
             .style("position", "absolute")
             .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 45) + "px");
+            .style("top", (d3.event.pageY - 65) + "px");
         })
         .on("mouseout", function(d) {
           d3.select(this).attr("r", 1);

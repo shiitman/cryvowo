@@ -77,9 +77,9 @@
 
 .tooltip {
   background-color: white;
-  height: 30px;
   position: absolute;
   z-index: 255;
+  border:1px solid black;
 }
 
 .button {
