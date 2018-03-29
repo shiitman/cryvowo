@@ -125,7 +125,7 @@ class Main {
     });
 
     /* generate radio buttons */
-    fetch("/settings/buttonList.json").then(function(resolved) {
+    fetch("./../settings/buttonList.json").then(function(resolved) {
       return resolved.json();
     }).then(function(buttonsList) {
       console.log(buttonsList);
