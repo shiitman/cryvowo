@@ -127,14 +127,13 @@ class Main {
     });
 
     /* generate radio buttons */
-    fetch("lib/settings/buttonList.json").then(function(resolved) {
+    fetch("lib/settings/buttonList.json").then((resolved) => {
       return resolved.json();
-    }).then(function(buttonsList) {
-     // console.log(buttonsList);
+    }).then((buttonsList) => {
       for (let i in buttonsList) {
         $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
-        (function(i) {
-          $("#" + buttonsList[i].id).click(function() {
+        ((i) => {
+          $("#" + buttonsList[i].id).click( () => {
             coinList.showLast(self.graph, buttonsList[i].time, buttonsList[i].count);
             localStorage.setItem("timeInterval", buttonsList[i].id);
           });

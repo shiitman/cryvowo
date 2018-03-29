@@ -15,6 +15,7 @@ export class Coinlist {
   }
 
   upgradeCurrList(str) {
+    //console.log(str)
     var self = this;
     this.myCurr = str.split(",");
     this.myCurr.map(function(val, index) {
@@ -22,6 +23,13 @@ export class Coinlist {
         self.myCurr.splice(index, 1);
       }
     });
+  }
+
+  addCurrency(curr) {
+    if (curr === "") {
+      return;
+    }
+
   }
 
   showLast(graph, hourOrMin = null, valuesCount = null) {
@@ -32,7 +40,6 @@ export class Coinlist {
     } else {
       return;
     }
-
     this.graph = graph || this.graph;
 
     if (this.interval) {
