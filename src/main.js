@@ -1,10 +1,12 @@
 /* jshint esversion: 6 */
 
-
- // TODO: Add promises everywhere
- // TODO: Clean unnecessary jQuery
- // TODO: Multiple windows
-
+// TODO: Add promises everywhere
+// TODO: Clean unnecessary jQuery
+// TODO: Multiple windows import {CurrencyAPI} from './api.js';
+import {CurrencyAPI} from './api.js';
+import {Coinlist} from './coinlist.js';
+import {Currency} from './currency.js';
+import {DrawGraph} from './drawGraph.js';
 
 class Main {
   constructor() {}
@@ -128,7 +130,7 @@ class Main {
     fetch("./../settings/buttonList.json").then(function(resolved) {
       return resolved.json();
     }).then(function(buttonsList) {
-      console.log(buttonsList);
+     // console.log(buttonsList);
       for (let i in buttonsList) {
         $("#control").append(`<input id="${buttonsList[i].id}" type="radio" name="interval"><label for="${buttonsList[i].id}" class="intervalLabel">${buttonsList[i].caption}</label><br />`);
         (function(i) {

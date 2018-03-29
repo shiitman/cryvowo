@@ -1,6 +1,7 @@
 /* jshint esversion: 6 */
+import {Currency} from './currency.js';
 
-class Coinlist {
+export class Coinlist {
   constructor(api) {
     this.myCurr = [];
     this.graph = null;

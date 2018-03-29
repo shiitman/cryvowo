@@ -15,7 +15,7 @@ d3.selection.prototype.moveToBack = function() {
   });
 };
 
-class DrawGraph {
+export class DrawGraph {
   constructor(svg, startX, startY, buttonY, buttWidth, buttHeight, width, height) {
     this.svg = svg;
     this.startX = startX;
@@ -55,7 +55,7 @@ class DrawGraph {
 
   initColors(currencies, size) {
 
-    console.log(currencies, size);
+    //console.log(currencies, size);
     for (let i = 0; i < size; i++) {
 
       this.colors[i] = DrawGraph.generateColor(currencies[i].name + "/" + currencies[i].name);
@@ -74,18 +74,18 @@ class DrawGraph {
 
     var colors = [0x990000, 0x009900, 0x000099];
 
-    hash = (hash) % (16777216/* 2097152 16777216 */); //
+    hash = (hash) % (16777216 /* 2097152 16777216 */ ); //
     for (let j = 0; j < 3; j++) {
       colors[j] = (((hash & colors[j]) >> (16 - j * 8)) + 0x22).toString(16);
       colors[j] = (
-        colors[j].length == 1
-        ? "0" + colors[j]
-        : colors[j]);
+        colors[j].length == 1 ?
+        "0" + colors[j] :
+        colors[j]);
     }
-    console.log(str, "#" + (
-    colors[0] + colors[1] + colors[2]));
+    /*  console.log(str, "#" + (
+        colors[0] + colors[1] + colors[2]));*/
     return ("#" + (
-    colors[0] + colors[1] + colors[2]));
+      colors[0] + colors[1] + colors[2]));
   }
 
   drawGraph(coinlist) {

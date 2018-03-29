@@ -4,6 +4,8 @@
   "description": "Observe and compare the exchange rates of different cryptocurrencies to optimize your portfolio. Relative price fluctuations can be displayed on the same graph.",
   "main": "server.js",
   "scripts": {
+    "start":"node server.js",
+    "start-dev":"browserify src/main.js -o lib/bundle.js -t [ babelify --presets [ env babel-preset-latest ] ] --debug;node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +21,12 @@
   "dependencies": {
     "express": "^4.16.3",
     "babel-core": "^6.0.20",
-    "babel-preset-es2015": "^6.0.0",
-    "babel-preset-react": "^6.0.0",
     "babel-plugin-syntax-flow": "^6.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-latest": "^6.24.1",
+    "babelify": "^8.0.0"
   }
 }

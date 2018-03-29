@@ -1,5 +1,5 @@
 /* jshint esversion: 6 */
-class Currency {
+export class Currency {
   constructor(name, conv, long = null) {
     this.name = name;
     this.longname = long || name;

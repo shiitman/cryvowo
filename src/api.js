@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-class CurrencyAPI {
+export class CurrencyAPI {
   constructor() {}
   getHistorical(hoursOrMinutes, name, conversion, valuesCount, counter = 0) {
     var self = this;
@@ -55,5 +55,6 @@ class CurrencyAPI {
     };
     return data;
   }
-
 }
+
+export default {CurrencyAPI};
